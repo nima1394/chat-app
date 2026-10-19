@@ -107,6 +107,9 @@
 
 <div class="app">
   
+  <!-- فایل صوتی برای صدای پیام -->
+  <audio id="notifSound" src="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/homework/notif.mp3.mp3"></audio>
+
   <div id="splashScreen">
     <div class="logo-icon"><span>...</span></div>
     <div class="splash-title">رودینو</div>
@@ -310,21 +313,18 @@
     document.getElementById('mainScreen').style.display = 'flex';
     document.getElementById('myStoryAvatar').innerText = currentUser.avatar;
     
-    // آنلاین کردن کاربر
     await db.from('profiles').update({ is_online: true }).eq('id', currentUser.id);
     
-    // به روزرسانی ساعت
     setInterval(() => {
       document.getElementById('globalClock').innerText = getFullIranTime();
     }, 1000);
     
     loadUsers();
     
-    // ====== سیستم لحظه‌ای (Realtime) برای وضعیت آنلاین/آفلاین ======
+    // سیستم لحظه‌ای برای وضعیت آنلاین
     db.channel('online-users')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
         const updatedUser = payload.new;
-        // آپدیت لیست ما
         const userIndex = allUsers.findIndex(u => u.id === updatedUser.id);
         if (userIndex !== -1) {
           allUsers[userIndex].is_online = updatedUser.is_online;
@@ -335,9 +335,29 @@
         }
       })
       .subscribe();
+
+    // سیستم لحظه‌ای برای دریافت پیام جدید و پخش صدا
+    db.channel('new-messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+        const newMsg = payload.new;
+        if (newMsg.sender_id !== currentUser.id) {
+          // پخش صدا
+          const sound = document.getElementById('notifSound');
+          sound.currentTime = 0;
+          sound.play().catch(e => console.log("پخش صدا نیاز به تعامل اولیه دارد."));
+          
+          if (currentChat && !isGroup && !isChannel && newMsg.sender_id === currentChat.id && newMsg.receiver_id === currentUser.id) {
+            loadMessages(false);
+          } else if (currentChat && isGroup && newMsg.group_id === currentChat.id) {
+            loadMessages(false);
+          } else if (currentChat && isChannel && newMsg.channel_id === currentChat.id) {
+            loadMessages(false);
+          }
+        }
+      })
+      .subscribe();
   }
 
-  // آفلاین کردن کاربر موقع بستن سایت
   window.addEventListener('beforeunload', () => {
     if (currentUser) {
       db.from('profiles').update({ is_online: false, last_seen: new Date().toISOString() }).eq('id', currentUser.id);
@@ -375,7 +395,6 @@
     const user = allUsers.find(u => u.id === currentChat.id);
     if (!user) return;
     const statusEl = document.getElementById('chatStatus');
-    
     if (user.is_online) {
       statusEl.innerText = "آنلاین";
       statusEl.className = "online-text";
@@ -408,7 +427,6 @@
       const div = document.createElement('div');
       div.className = 'chat-item';
       div.onclick = () => openChat(u);
-      
       let statusHtml = u.isChannel ? '<p>کانال</p>' : u.isGroup ? '<p>گروه</p>' : 
         `<p class="${u.is_online ? 'online-text' : ''}">${u.is_online ? '🟢 آنلاین' : '⚪ آفلاین'}</p>`;
 
@@ -452,7 +470,7 @@
 
     loadMessages(true);
     if(pollInterval) clearInterval(pollInterval);
-    pollInterval = setInterval(() => loadMessages(false), 1500);
+    pollInterval = setInterval(() => loadMessages(false), 3000);
   }
 
   function backToMain() {

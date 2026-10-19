@@ -8,24 +8,30 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
-  :root { --gold: #f3c67e; --dark: #121212; --dark-2: #1e1e1e; --dark-3: #2c2c2c; --text-muted: #888; --blue: #3498db; --red: #e74c3c; }
+  :root { --gold: #f3c67e; --dark: #121212; --dark-2: #1e1e1e; --dark-3: #2c2c2c; --text-muted: #888; --blue: #3498db; --red: #e74c3c; --text-color: #fff; }
   
-  body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
+  body.light-mode { --dark: #ffffff; --dark-2: #f0f0f0; --dark-3: #e0e0e0; --text-color: #000; --text-muted: #555; }
+  body.light-mode .header .title { color: #000; }
+  body.light-mode .header .icons { color: #000; }
+  body.light-mode .bottom-nav { border-top-color: #ccc; }
+  body.light-mode .msg.sent { background: #dcf8c6; color: #000; }
+  body.light-mode .msg.received { background: #ffffff; color: #000; border: 1px solid #ddd; }
+  body.light-mode .msg a { color: #2980b9; }
+  body.light-mode .input-area { background: #f0f0f0; }
+  body.light-mode .input-area input { background: #fff; color: #000; border: 1px solid #ccc; }
+
+  body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); color: var(--text-color); }
   
   .iphone-frame {
     width: 96%; max-width: 390px; height: 96vh; max-height: 844px;
-    background: var(--dark); color: white; display: flex; flex-direction: column; position: relative; overflow: hidden;
+    background: var(--dark); color: var(--text-color); display: flex; flex-direction: column; position: relative; overflow: hidden;
     border-radius: 40px; border: 6px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 0 2px #000;
   }
 
-  .status-bar {
-    position: absolute; top: 0; left: 0; right: 0; height: 40px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0 25px; z-index: 15000; font-size: 0.8rem; font-weight: bold; color: white;
-  }
+  .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 40px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 15000; font-size: 0.8rem; font-weight: bold; color: var(--text-color); }
   .status-bar .time { direction: ltr; }
   .status-bar .icons { display: flex; gap: 5px; align-items: center; }
-  .status-bar .icons svg { width: 16px; height: 16px; fill: white; }
+  .status-bar .icons svg { width: 16px; height: 16px; fill: var(--text-color); }
 
   .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 100px; height: 28px; background: #000; border-radius: 20px; z-index: 20000; }
 
@@ -34,12 +40,12 @@
   .logo-icon::after { content: ''; position: absolute; bottom: -8px; right: 10px; width: 20px; height: 20px; background: var(--dark); border: 3px solid var(--gold); border-top: none; border-left: none; transform: rotate(45deg); border-bottom-right-radius: 4px; }
   .logo-icon span { color: var(--gold); font-size: 3rem; letter-spacing: 5px; margin-top: -10px; }
   .splash-title { color: var(--gold); font-size: 2.5rem; font-weight: bold; margin-bottom: 10px; }
-  .splash-sub { color: #ccc; font-size: 1rem; margin-bottom: 40px; }
+  .splash-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 40px; }
   .btn-start { background: var(--gold); color: #000; border: none; padding: 15px 40px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 80%; transition: 0.2s; }
 
   #loginScreen { padding: 30px; display: none; flex-direction: column; justify-content: center; height: 100%; text-align: center; }
   #loginScreen h1 { color: var(--gold); margin-bottom: 20px; }
-  #loginScreen input { padding: 15px; border: 1px solid #333; background: var(--dark-2); color: white; border-radius: 12px; margin-bottom: 15px; font-size: 1rem; outline: none; }
+  #loginScreen input { padding: 15px; border: 1px solid #333; background: var(--dark-2); color: var(--text-color); border-radius: 12px; margin-bottom: 15px; font-size: 1rem; outline: none; }
   #loginScreen button { padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; }
 
   .header { padding: 55px 20px 15px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--dark); }
@@ -48,12 +54,12 @@
   .header .icons { display: flex; gap: 15px; color: var(--gold); font-size: 1.2rem; }
   
   .search-box { padding: 0 20px 15px; }
-  .search-box input { width: 100%; padding: 12px 15px; border-radius: 20px; border: none; background: var(--dark-2); color: white; outline: none; font-size: 0.9rem; }
+  .search-box input { width: 100%; padding: 12px 15px; border-radius: 20px; border: none; background: var(--dark-2); color: var(--text-color); outline: none; font-size: 0.9rem; }
 
   .stories { display: flex; gap: 15px; padding: 0 20px 15px; overflow-x: auto; }
   .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
   .story .avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; background: var(--dark-2); position: relative; }
-  .story span { font-size: 0.75rem; color: #ccc; }
+  .story span { font-size: 0.75rem; color: var(--text-muted); }
   .online-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--dark); background: #888; transition: background 0.3s; }
   .online-dot.online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
 
@@ -62,7 +68,7 @@
   .chat-item:hover { background: var(--dark-2); }
   .chat-item .avatar { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: var(--dark-3); position: relative; }
   .chat-item .avatar.channel { border-radius: 12px; background: var(--blue); color: white; }
-  .chat-item .info h4 { font-size: 1rem; color: #fff; margin-bottom: 5px; }
+  .chat-item .info h4 { font-size: 1rem; color: var(--text-color); margin-bottom: 5px; }
   .chat-item .info p { font-size: 0.8rem; color: var(--text-muted); transition: color 0.3s; }
   .chat-item .info p.online-text { color: #2ecc71; font-weight: bold; }
 
@@ -78,21 +84,24 @@
   .chat-header { padding: 55px 20px 15px 20px; display: flex; align-items: center; gap: 15px; background: var(--dark-2); }
   .chat-header .back { color: var(--gold); font-size: 1.5rem; cursor: pointer; }
   .chat-header .chat-info { flex: 1; }
-  .chat-header .chat-info h4 { font-size: 1rem; }
+  .chat-header .chat-info h4 { font-size: 1rem; color: var(--text-color); }
   .chat-header .chat-info p { font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s; }
   .chat-header .chat-info p.online-text { color: #2ecc71; }
   
-  .messages-area { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--dark); }
+  .typing-indicator { font-size: 0.75rem; color: var(--gold); padding: 0 20px 5px; height: 15px; display: none; }
+  .typing-indicator.show { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .messages-area { flex: 1; padding: 10px 20px 20px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--dark); }
   
   .msg-wrapper { display: flex; flex-direction: column; max-width: 80%; }
   .msg-wrapper.sent { align-self: flex-start; }
   .msg-wrapper.received { align-self: flex-end; }
-  .msg { padding: 8px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; cursor: pointer; user-select: none; }
+  .msg { padding: 8px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; cursor: pointer; user-select: none; position: relative; }
   .msg.sent { background: var(--gold); color: #000; border-bottom-left-radius: 2px; }
-  .msg.received { background: var(--dark-3); color: #fff; border-bottom-right-radius: 2px; }
+  .msg.received { background: var(--dark-3); color: var(--text-color); border-bottom-right-radius: 2px; }
   .msg a { color: #3498db; text-decoration: underline; font-weight: bold; }
   .msg.sent a { color: #1a5276; }
-  
   .msg img { max-width: 100%; border-radius: 10px; display: block; }
   .msg audio { width: 200px; height: 40px; outline: none; margin-top: 5px; }
   
@@ -100,13 +109,18 @@
   .msg-wrapper.sent .msg-meta { color: #333; }
   .msg-wrapper.received .msg-meta { color: #aaa; }
   .tick.seen { color: #2ecc71; font-weight: bold; }
+  .edited-tag { font-size: 0.6rem; color: #888; font-style: italic; margin-left: 5px; }
 
   .input-area { padding: 10px 10px 25px 10px; background: var(--dark-2); display: flex; gap: 5px; align-items: center; }
-  .input-area input { flex: 1; padding: 10px 15px; border-radius: 20px; border: none; background: var(--dark); color: white; outline: none; font-size: 0.85rem; }
+  .input-area input { flex: 1; padding: 10px 15px; border-radius: 20px; border: none; background: var(--dark); color: var(--text-color); outline: none; font-size: 0.85rem; }
   .input-area button { background: var(--gold); color: #000; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; flex-shrink: 0; }
   .input-area button.media-btn { background: transparent; color: var(--gold); font-size: 1.3rem; width: 35px; }
   .input-area button.recording { background: var(--red); color: white; animation: pulse 1s infinite; }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+  .emoji-picker { position: absolute; bottom: 80px; right: 10px; background: var(--dark-2); border: 1px solid #444; border-radius: 10px; padding: 10px; display: none; grid-template-columns: repeat(5, 1fr); gap: 5px; z-index: 25000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+  .emoji-picker span { font-size: 1.5rem; cursor: pointer; text-align: center; }
+  .emoji-picker span:hover { transform: scale(1.2); }
 
   .confirm-bar { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--red); color: white; z-index: 30000; display: none; justify-content: space-between; align-items: center; padding: 0 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 2px 10px rgba(0,0,0,0.5); animation: slideDown 0.3s ease; }
   @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
@@ -116,9 +130,9 @@
   .modal { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; justify-content: center; align-items: flex-end; border-radius: 35px; }
   .modal-content { background: var(--dark-2); padding: 25px 25px 35px 25px; border-radius: 25px 25px 0 0; width: 100%; max-width: 390px; border-top: 1px solid #333; max-height: 80vh; overflow-y: auto; }
   .modal-content h3 { margin-bottom: 20px; color: var(--gold); text-align: center; }
-  .modal-content input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #444; background: var(--dark); color: white; border-radius: 12px; outline: none; }
+  .modal-content input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #444; background: var(--dark); color: var(--text-color); border-radius: 12px; outline: none; }
   .modal-content button { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 12px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 1rem; }
-  .modal-content .cancel { background: transparent; color: #aaa; border: 1px solid #444; }
+  .modal-content .cancel { background: transparent; color: var(--text-muted); border: 1px solid #444; }
   
   .admin-check { display: flex; align-items: center; gap: 10px; padding: 12px; margin-bottom: 8px; background: var(--dark); border-radius: 10px; cursor: pointer; font-size: 0.9rem; }
   .admin-btn-danger { background: var(--red) !important; color: white !important; }
@@ -128,6 +142,10 @@
   .admin-user-item:last-child { border-bottom: none; }
   .admin-user-item span { font-size: 0.9rem; }
   .admin-user-item button { width: auto; padding: 5px 15px; font-size: 0.8rem; margin: 0; background: var(--red); color: white; }
+
+  /* استایل جستجوی پیام در چت */
+  .search-bar-chat { display: none; padding: 5px 20px; background: var(--dark-2); }
+  .search-bar-chat input { width: 100%; padding: 8px 15px; border-radius: 15px; border: 1px solid #444; background: var(--dark); color: var(--text-color); outline: none; font-size: 0.8rem; }
 </style>
 </head>
 <body>
@@ -146,10 +164,11 @@
   <div class="dynamic-island"></div>
 
   <div class="confirm-bar" id="confirmBar">
-    <span>آیا از حذف این پیام مطمئنی؟</span>
+    <span>پیام انتخاب شد:</span>
     <div>
-      <button class="cancel-btn" onclick="cancelDelete()">لغو</button>
-      <button onclick="confirmDelete()">تایید</button>
+      <button class="cancel-btn" onclick="cancelAction()">لغو</button>
+      <button onclick="editMessage()" style="background:var(--blue); color:white; margin-left:5px;">ویرایش</button>
+      <button onclick="confirmDelete()" style="background:var(--red); color:white;">حذف</button>
     </div>
   </div>
 
@@ -175,6 +194,7 @@
     <div class="header">
       <div class="title">رودینو <span id="globalClock">در حال دریافت ساعت...</span></div>
       <div class="icons">
+        <span style="cursor:pointer;" onclick="toggleTheme()">🌙</span>
         <span style="cursor:pointer;" onclick="openAdminPanel()">⚙️</span>
         <span style="cursor:pointer;" onclick="openCreateGroup()">👥+</span>
         <span style="cursor:pointer;" onclick="openCreateChannel()">📢+</span>
@@ -182,7 +202,7 @@
     </div>
     
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="جستجو..." oninput="searchUsers()">
+      <input type="text" id="searchInput" placeholder="جستجوی مخاطب..." oninput="searchUsers()">
     </div>
 
     <div class="stories" id="storiesContainer">
@@ -207,7 +227,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
-      <div class="version-tag">v3.1.0</div>
+      <div class="version-tag">v4.0.0</div>
     </div>
   </div>
 
@@ -215,19 +235,42 @@
     <div class="chat-header">
       <span class="back" onclick="backToMain()">➡️</span>
       <div class="avatar" id="chatAvatar" style="width:40px; height:40px; border-radius:50%; background:#333; display:flex; justify-content:center; align-items:center;"></div>
-      <div class="chat-info">
+      <div class="chat-info" onclick="showUserProfile()">
         <h4 id="chatWithName"></h4>
         <p id="chatStatus">در حال بارگذاری...</p>
       </div>
       <span id="chatInviteBtn" style="color:var(--gold); font-size:1.2rem; cursor:pointer; display:none;" onclick="copyCurrentInvite()" title="کپی لینک دعوت">🔗</span>
+      <span style="color:var(--gold); font-size:1.2rem; cursor:pointer;" onclick="toggleChatSearch()">🔍</span>
     </div>
+    
+    <!-- جستجوی داخل چت -->
+    <div class="search-bar-chat" id="chatSearchBar">
+      <input type="text" id="chatSearchInput" placeholder="جستجو در پیام‌ها..." oninput="searchInChat()">
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator">در حال نوشتن...</div>
     <div class="messages-area" id="messagesArea"></div>
     
     <div class="input-area">
+      <button class="media-btn" onclick="toggleEmoji()">😊</button>
       <button class="media-btn" onclick="document.getElementById('imageInput').click()">📷</button>
       <button class="media-btn" id="voiceBtn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">🎤</button>
-      <input type="text" id="messageInput" placeholder="پیام..." onkeypress="if(event.key==='Enter') sendMessage()">
+      <input type="text" id="messageInput" placeholder="پیام..." onkeypress="if(event.key==='Enter') sendMessage()" oninput="handleTyping()">
       <button onclick="sendMessage()">➤</button>
+    </div>
+
+    <!-- انتخابگر ایموجی -->
+    <div class="emoji-picker" id="emojiPicker">
+      <span onclick="addEmoji('😊')">😊</span>
+      <span onclick="addEmoji('😂')">😂</span>
+      <span onclick="addEmoji('❤️')">❤️</span>
+      <span onclick="addEmoji('👍')">👍</span>
+      <span onclick="addEmoji('🔥')">🔥</span>
+      <span onclick="addEmoji('😍')">😍</span>
+      <span onclick="addEmoji('🙏')">🙏</span>
+      <span onclick="addEmoji('😎')">😎</span>
+      <span onclick="addEmoji('😭')">😭</span>
+      <span onclick="addEmoji('🎉')">🎉</span>
     </div>
   </div>
 
@@ -243,6 +286,16 @@
     <input type="text" id="profileAvatar" placeholder="ایموجی (مثلا 😊)" maxlength="2">
     <button onclick="saveProfile()">ذخیره تغییرات</button>
     <button class="cancel" onclick="closeModal('profileModal')">انصراف</button>
+  </div>
+</div>
+
+<div class="modal" id="userProfileModal">
+  <div class="modal-content" style="text-align:center;">
+    <div id="userProfileAvatar" style="font-size: 4rem; margin-bottom: 10px;">😊</div>
+    <h3 id="userProfileName" style="margin-bottom: 5px;"></h3>
+    <p id="userProfileStatus" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 20px;"></p>
+    <button onclick="closeModal('userProfileModal'); openChatFromProfile();" style="background: var(--blue); color: white;">ارسال پیام</button>
+    <button class="cancel" onclick="closeModal('userProfileModal')">بستن</button>
   </div>
 </div>
 
@@ -278,7 +331,7 @@
 <div class="modal" id="adminModal">
   <div class="modal-content">
     <h3>⚠️ پنل مدیریت</h3>
-    <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">حذف کاربران (با کلیک روی دکمه حذف، کاربر از برنامه بیرون انداخته می‌شود):</p>
+    <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">حذف کاربران:</p>
     <div class="admin-user-list" id="adminUserList"></div>
     <hr style="border-color:#333; margin:15px 0;">
     <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">پاک کردن کلی:</p>
@@ -299,13 +352,14 @@
   let currentUser = null, currentChat = null, isGroup = false, isChannel = false;
   let allUsers = [], combinedList = [], lastMsgTime = "1970-01-01T00:00:00Z";
   let pollInterval = null, currentTab = 'chats', globalTimeOffset = 0;
-  let msgToDelete = null;
-  let mediaRecorder;
-  let audioChunks = [];
+  let selectedMsg = null; // برای نگه داشتن پیام انتخاب شده (حذف/ویرایش)
+  let mediaRecorder, audioChunks = [];
+  let typingTimeout;
 
   const enc = (t) => t.split('').map(c => c.charCodeAt(0).toString(2).padStart(16, '0')).join(' ');
   const dec = (b) => !b ? "" : b.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
 
+  // ====== ساعت و تم ======
   async function syncGlobalTime() {
     try {
       const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran');
@@ -331,17 +385,28 @@
     document.getElementById('statusTime').innerText = timeStr;
   };
 
+  function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  }
+
+  window.onload = async () => {
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+    await syncGlobalTime();
+    updateStatusTime();
+    setInterval(updateStatusTime, 10000);
+    if (localStorage.getItem('chat_user')) checkAutoLogin();
+  };
+
   function unlockAudio() {
     const silent = document.getElementById('silentAudio');
     silent.volume = 0;
     silent.play().then(() => { silent.pause(); silent.currentTime = 0; }).catch(e => {});
   }
 
-  async function goToLogin() {
+  function goToLogin() {
     unlockAudio();
-    await syncGlobalTime();
-    updateStatusTime();
-    setInterval(updateStatusTime, 10000);
     document.getElementById('splashScreen').style.opacity = '0';
     setTimeout(() => {
       document.getElementById('splashScreen').style.display = 'none';
@@ -360,6 +425,7 @@
     } else {
       localStorage.removeItem('chat_user');
       document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('splashScreen').style.display = 'none';
     }
   }
 
@@ -386,6 +452,7 @@
 
   async function enterApp() {
     document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('splashScreen').style.display = 'none';
     document.getElementById('mainScreen').style.display = 'flex';
     document.getElementById('myStoryAvatar').innerText = currentUser.avatar;
     
@@ -396,7 +463,10 @@
     }, 1000);
     
     loadUsers();
-    
+    setupRealtime();
+  }
+
+  function setupRealtime() {
     db.channel('online-users')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
         const updatedUser = payload.new;
@@ -417,8 +487,13 @@
         if (newMsg.sender_id !== currentUser.id) {
           const sound = document.getElementById('notifSound');
           sound.currentTime = 0;
-          sound.play().catch(e => console.log("خطا در پخش صدا:", e));
+          sound.play().catch(e => console.log("صدا:", e));
           
+          // نوتیفیکیشن مرورگر
+          if (Notification.permission === "granted") {
+            new Notification("پیام جدید در رودینو", { body: "شما یک پیام جدید دارید" });
+          }
+
           if (currentChat && !isGroup && !isChannel && newMsg.sender_id === currentChat.id && newMsg.receiver_id === currentUser.id) {
             loadMessages(false);
           } else if (currentChat && isGroup && newMsg.group_id === currentChat.id) {
@@ -435,11 +510,25 @@
         if (currentChat) loadMessages(true);
       })
       .subscribe();
+      
+    // برای typing indicator
+    db.channel('typing')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
+        if (currentChat && payload.new.id === currentChat.id && payload.new.is_typing) {
+          document.getElementById('typingIndicator').innerText = `${currentChat.name} در حال نوشتن...`;
+          document.getElementById('typingIndicator').classList.add('show');
+          clearTimeout(typingTimeout);
+          typingTimeout = setTimeout(() => {
+            document.getElementById('typingIndicator').classList.remove('show');
+          }, 2000);
+        }
+      })
+      .subscribe();
   }
 
   window.addEventListener('beforeunload', () => {
     if (currentUser) {
-      db.from('profiles').update({ is_online: false, last_seen: new Date().toISOString() }).eq('id', currentUser.id);
+      db.from('profiles').update({ is_online: false, last_seen: new Date().toISOString(), is_typing: false }).eq('id', currentUser.id);
     }
   });
 
@@ -501,7 +590,7 @@
     if (currentTab === 'channels') filtered = items.filter(i => i.isChannel);
     else if (currentTab === 'people') filtered = items.filter(i => !i.isGroup && !i.isChannel);
 
-    list.innerHTML = filtered.length ? '' : '<p style="text-align:center; padding:20px; color:#888;">موردی یافت نشد</p>';
+    list.innerHTML = filtered.length ? '' : '<p style="text-align:center; padding:20px; color:var(--text-muted);">موردی یافت نشد</p>';
     filtered.forEach(u => {
       const div = document.createElement('div');
       div.className = 'chat-item';
@@ -526,6 +615,9 @@
 
   function openChat(item) {
     unlockAudio();
+    // درخواست نوتیفیکیشن
+    if (Notification.permission === "default") Notification.requestPermission();
+
     currentChat = item;
     isGroup = item.isGroup;
     isChannel = item.isChannel;
@@ -558,7 +650,9 @@
     clearInterval(pollInterval);
     document.getElementById('chatScreen').style.display = 'none';
     document.getElementById('mainScreen').style.display = 'flex';
+    document.getElementById('typingIndicator').classList.remove('show');
     loadUsers();
+    db.from('profiles').update({ is_typing: false }).eq('id', currentUser.id);
   }
 
   async function loadMessages(init) {
@@ -592,6 +686,10 @@
           
           let rawText = dec(m.encrypted_content);
           
+          // بررسی اینکه آیا پیام ویرایش شده یا نه
+          let isEdited = rawText.includes('[EDITED]');
+          if (isEdited) rawText = rawText.replace('[EDITED]', '').trim();
+          
           if (rawText.includes('[IMAGE]')) {
             let url = rawText.replace('[IMAGE]', '').trim();
             msgDiv.innerHTML = `<img src="${url}" alt="عکس">`;
@@ -602,9 +700,10 @@
             msgDiv.innerHTML = rawText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
           }
 
-          msgDiv.oncontextmenu = (e) => { e.preventDefault(); showConfirmBar(m.id); };
+          // کلیک راست یا نگه داشتن برای حذف/ویرایش
+          msgDiv.oncontextmenu = (e) => { e.preventDefault(); selectMessageForAction(m.id, rawText); };
           let touchTimer;
-          msgDiv.ontouchstart = (e) => { touchTimer = setTimeout(() => { showConfirmBar(m.id); }, 600); };
+          msgDiv.ontouchstart = (e) => { touchTimer = setTimeout(() => { selectMessageForAction(m.id, rawText); }, 600); };
           msgDiv.ontouchend = () => clearTimeout(touchTimer);
           msgDiv.ontouchmove = () => clearTimeout(touchTimer);
 
@@ -612,7 +711,7 @@
           
           const metaDiv = document.createElement('div');
           metaDiv.className = 'msg-meta';
-          metaDiv.innerHTML = `<span>${formatTime(m.created_at)}</span>${tickHtml}`;
+          metaDiv.innerHTML = `<span>${isEdited ? '<i class="edited-tag">(ویرایش شده)</i>' : ''}</span><span>${formatTime(m.created_at)}</span>${tickHtml}`;
           wrapper.appendChild(metaDiv);
 
           area.appendChild(wrapper);
@@ -623,12 +722,53 @@
     }
   }
 
+  // ====== انتخاب پیام برای حذف یا ویرایش ======
+  function selectMessageForAction(msgId, rawText) {
+    selectedMsg = { id: msgId, text: rawText };
+    const bar = document.getElementById('confirmBar');
+    // اگر پیام عکس یا ویس بود، دکمه ویرایش مخفی بشه
+    const editBtn = bar.querySelector('button[onclick="editMessage()"]');
+    if (rawText.includes('[IMAGE]') || rawText.includes('[AUDIO]')) editBtn.style.display = 'none';
+    else editBtn.style.display = 'block';
+    bar.style.display = 'flex';
+  }
+
+  function cancelAction() {
+    selectedMsg = null;
+    document.getElementById('confirmBar').style.display = 'none';
+  }
+
+  async function editMessage() {
+    if (!selectedMsg) return;
+    let newText = prompt("متن جدید را وارد کنید:", selectedMsg.text);
+    if (newText === null || newText.trim() === "" || newText === selectedMsg.text) {
+      cancelAction(); return;
+    }
+    try {
+      await db.from('messages').update({ encrypted_content: enc(newText + ' [EDITED]') }).eq('id', selectedMsg.id);
+      cancelAction();
+      loadMessages(true); 
+    } catch (err) { alert("خطا در ویرایش: " + err.message); }
+  }
+
+  async function confirmDelete() {
+    if (!selectedMsg) return;
+    try {
+      await db.from('messages').delete().eq('id', selectedMsg.id);
+      cancelAction();
+      loadMessages(true); 
+    } catch (err) { alert("❌ خطا در حذف: " + err.message); }
+  }
+
+  // ====== ارسال متن ======
   async function sendMessage() {
     const input = document.getElementById('messageInput');
     if (!input.value.trim() || !currentChat) return;
     
     await insertMessage(input.value.trim());
     input.value = '';
+    document.getElementById('emojiPicker').style.display = 'none';
+    db.from('profiles').update({ is_typing: false }).eq('id', currentUser.id);
   }
 
   async function insertMessage(text) {
@@ -641,28 +781,19 @@
     loadMessages(false);
   }
 
-  // ====== ارسال سریع عکس (با فشرده‌سازی) ======
+  // ====== ارسال عکس ======
   async function uploadImage(file) {
     if (!file || !currentChat) return;
-    
-    // ۱. فشرده‌سازی عکس قبل از آپلود
     const compressedFile = await compressImage(file);
-    
-    const fileName = `img_${Date.now()}.jpg`; // همیشه jpg برای حجم کم
-    
+    const fileName = `img_${Date.now()}.jpg`;
     try {
-      // ۲. آپلود به Supabase
       const { error } = await db.storage.from('chat-media').upload(fileName, compressedFile);
       if (error) throw error;
-      
       const { data: urlData } = db.storage.from('chat-media').getPublicUrl(fileName);
       await insertMessage(`[IMAGE] ${urlData.publicUrl}`);
-    } catch (err) {
-      alert("خطا در آپلود عکس: " + err.message);
-    }
+    } catch (err) { alert("خطا در آپلود عکس: " + err.message); }
   }
 
-  // تابع فشرده‌سازی عکس
   function compressImage(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -672,80 +803,101 @@
         img.src = event.target.result;
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800; // حداکثر عرض
+          const MAX_WIDTH = 800;
           const scale = MAX_WIDTH / img.width;
           canvas.width = MAX_WIDTH;
           canvas.height = img.height * scale;
-          
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          canvas.toBlob((blob) => {
-            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-          }, 'image/jpeg', 0.7); // کیفیت ۷۰٪
+          canvas.toBlob((blob) => { resolve(new File([blob], file.name, { type: 'image/jpeg' })); }, 'image/jpeg', 0.7);
         };
       };
     });
   }
 
-  // ====== ضبط و ارسال ویس ======
+  // ====== ارسال ویس ======
   async function startRecording() {
     if (!currentChat) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder = new MediaRecorder(stream);
       audioChunks = [];
-
       mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
-
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
         const fileName = `voice_${Date.now()}.webm`;
-        
         document.getElementById('voiceBtn').classList.remove('recording');
-        
         const { error } = await db.storage.from('chat-media').upload(fileName, audioBlob);
         if (error) return alert("خطا در آپلود ویس: " + error.message);
-        
         const { data: urlData } = db.storage.from('chat-media').getPublicUrl(fileName);
         await insertMessage(`[AUDIO] ${urlData.publicUrl}`);
-        
         stream.getTracks().forEach(track => track.stop());
       };
-
       mediaRecorder.start();
       document.getElementById('voiceBtn').classList.add('recording');
-    } catch (err) {
-      alert("خطا در دسترسی به میکروفون: " + err.message);
-    }
+    } catch (err) { alert("خطا در دسترسی به میکروفون: " + err.message); }
   }
 
   function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-      mediaRecorder.stop();
-    }
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
   }
 
-  // ====== بخش‌های دیگه ======
-  function showConfirmBar(msgId) {
-    msgToDelete = msgId;
-    document.getElementById('confirmBar').style.display = 'flex';
+  // ====== ایموجی ======
+  function toggleEmoji() {
+    const picker = document.getElementById('emojiPicker');
+    picker.style.display = picker.style.display === 'grid' ? 'none' : 'grid';
   }
 
-  function cancelDelete() {
-    document.getElementById('confirmBar').style.display = 'none';
-    msgToDelete = null;
+  function addEmoji(emoji) {
+    const input = document.getElementById('messageInput');
+    input.value += emoji;
+    input.focus();
   }
 
-  async function confirmDelete() {
-    if (!msgToDelete) return;
-    try {
-      const { error } = await db.from('messages').delete().eq('id', msgToDelete);
-      if (error) throw error;
-      cancelDelete();
-      loadMessages(true); 
-    } catch (err) {
-      alert("❌ خطا در حذف پیام: " + err.message);
+  // ====== تایپینگ ایندیکیتور ======
+  function handleTyping() {
+    if (!currentUser) return;
+    db.from('profiles').update({ is_typing: true }).eq('id', currentUser.id);
+    clearTimeout(window.typingTimer);
+    window.typingTimer = setTimeout(() => {
+      db.from('profiles').update({ is_typing: false }).eq('id', currentUser.id);
+    }, 2000);
+  }
+
+  // ====== جستجو در چت ======
+  function toggleChatSearch() {
+    const bar = document.getElementById('chatSearchBar');
+    bar.style.display = bar.style.display === 'block' ? 'none' : 'block';
+    if (bar.style.display === 'block') document.getElementById('chatSearchInput').focus();
+  }
+
+  function searchInChat() {
+    const q = document.getElementById('chatSearchInput').value.toLowerCase();
+    const msgs = document.querySelectorAll('.msg');
+    msgs.forEach(m => {
+      if (q === "") m.style.outline = 'none';
+      else if (m.innerText.toLowerCase().includes(q)) m.style.outline = '2px solid var(--gold)';
+      else m.style.outline = 'none';
+    });
+  }
+
+  // ====== پروفایل ======
+  function showUserProfile() {
+    if (!currentChat || isGroup || isChannel) return;
+    document.getElementById('userProfileAvatar').innerText = currentChat.avatar;
+    document.getElementById('userProfileName').innerText = currentChat.name;
+    
+    const user = allUsers.find(u => u.id === currentChat.id);
+    const statusEl = document.getElementById('userProfileStatus');
+    if (user && user.is_online) statusEl.innerText = "آنلاین 🟢";
+    else if (user) statusEl.innerText = `آخرین بازدید: ${formatTime(user.last_seen)}`;
+    
+    document.getElementById('userProfileModal').style.display = 'flex';
+  }
+
+  function openChatFromProfile() {
+    if (currentChat) {
+      // همون چت بازه، کاری لازم نیست
     }
   }
 
@@ -847,7 +999,6 @@
           <button onclick="deleteUser('${u.id}', '${u.name}')">حذف</button>
         </div>`
       ).join('');
-      
       document.getElementById('delMessages').checked = false;
       document.getElementById('delGroups').checked = false;
       document.getElementById('delUsers').checked = false;
@@ -863,9 +1014,7 @@
       alert(`✅ حساب ${name} پاک شد!`);
       loadUsers();
       closeModal('adminModal');
-    } catch (err) {
-      alert("❌ خطا در حذف کاربر: " + err.message);
-    }
+    } catch (err) { alert("❌ خطا در حذف کاربر: " + err.message); }
   }
 
   async function executeReset() {

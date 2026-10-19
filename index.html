@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
-  :root { --gold: #f3c67e; --dark: #121212; --dark-2: #1e1e1e; --dark-3: #2c2c2c; --text-muted: #888; --blue: #3498db; }
+  :root { --gold: #f3c67e; --dark: #121212; --dark-2: #1e1e1e; --dark-3: #2c2c2c; --text-muted: #888; --blue: #3498db; --red: #e74c3c; }
   
   body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
   
@@ -99,12 +99,7 @@
   .tick.seen { color: #2ecc71; font-weight: bold; }
 
   .test-sound-bar { padding: 5px 15px; background: var(--dark-2); display: flex; justify-content: center; }
-  .test-sound-btn { 
-    background: #e74c3c; color: white; border: none; padding: 8px 20px; 
-    border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: bold;
-    display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    transition: 0.2s;
-  }
+  .test-sound-btn { background: var(--red); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.2s; }
   .test-sound-btn:hover { background: #c0392b; transform: scale(1.05); }
 
   .input-area { padding: 10px 15px 25px 15px; background: var(--dark-2); display: flex; gap: 10px; align-items: center; }
@@ -112,18 +107,34 @@
   .input-area button { background: var(--gold); color: #000; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; }
 
   .modal { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; justify-content: center; align-items: flex-end; border-radius: 35px; }
-  .modal-content { background: var(--dark-2); padding: 25px 25px 35px 25px; border-radius: 25px 25px 0 0; width: 100%; max-width: 390px; border-top: 1px solid #333; }
+  .modal-content { background: var(--dark-2); padding: 25px 25px 35px 25px; border-radius: 25px 25px 0 0; width: 100%; max-width: 390px; border-top: 1px solid #333; max-height: 80vh; overflow-y: auto; }
   .modal-content h3 { margin-bottom: 20px; color: var(--gold); text-align: center; }
   .modal-content input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #444; background: var(--dark); color: white; border-radius: 12px; outline: none; }
   .modal-content button { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 12px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 1rem; }
   .modal-content .cancel { background: transparent; color: #aaa; border: 1px solid #444; }
   
   .admin-check { display: flex; align-items: center; gap: 10px; padding: 12px; margin-bottom: 8px; background: var(--dark); border-radius: 10px; cursor: pointer; font-size: 0.9rem; }
-  .admin-btn-danger { background: #e74c3c !important; color: white !important; }
+  .admin-btn-danger { background: var(--red) !important; color: white !important; }
 
-  .delete-menu { position: absolute; background: var(--dark-2); border: 1px solid #444; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 30000; display: none; overflow: hidden; }
-  .delete-menu button { display: block; width: 100%; padding: 12px 20px; background: transparent; color: #e74c3c; border: none; font-family: inherit; font-size: 0.9rem; cursor: pointer; text-align: right; }
-  .delete-menu button:hover { background: rgba(231, 76, 60, 0.1); }
+  /* نوار تایید حذف پیام بالای صفحه */
+  .confirm-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 50px;
+    background: var(--red); color: white; z-index: 30000;
+    display: none; justify-content: space-between; align-items: center;
+    padding: 0 20px; font-weight: bold; font-size: 0.9rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    animation: slideDown 0.3s ease;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+  .confirm-bar button { background: white; color: var(--red); border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; }
+  .confirm-bar .cancel-btn { background: transparent; color: white; border: 1px solid white; }
+  
+  /* لیست کاربران در پنل مدیریت */
+  .admin-user-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #444; border-radius: 10px; }
+  .admin-user-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #333; }
+  .admin-user-item:last-child { border-bottom: none; }
+  .admin-user-item span { font-size: 0.9rem; }
+  .admin-user-item button { width: auto; padding: 5px 15px; font-size: 0.8rem; margin: 0; background: var(--red); color: white; }
 </style>
 </head>
 <body>
@@ -141,14 +152,17 @@
 
   <div class="dynamic-island"></div>
 
-  <!-- فایل صوتی سکوت برای بیدار کردن مرورگر -->
-  <audio id="silentAudio" preload="auto" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"></audio>
-  <!-- فایل صوتی صدای پیام -->
-  <audio id="notifSound" src="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/homework/notif.mp3.mp3"></audio>
-
-  <div class="delete-menu" id="deleteMenu">
-    <button onclick="confirmDelete()">🗑️ حذف پیام</button>
+  <!-- نوار تایید حذف پیام -->
+  <div class="confirm-bar" id="confirmBar">
+    <span>آیا از حذف این پیام مطمئنی؟</span>
+    <div>
+      <button class="cancel-btn" onclick="cancelDelete()">لغو</button>
+      <button onclick="confirmDelete()">تایید</button>
+    </div>
   </div>
+
+  <audio id="silentAudio" preload="auto" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"></audio>
+  <audio id="notifSound" src="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/homework/notif.mp3.mp3"></audio>
 
   <div id="splashScreen">
     <div class="logo-icon"><span>...</span></div>
@@ -199,7 +213,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
-      <div class="version-tag">v2.7.1</div>
+      <div class="version-tag">v2.8.0</div>
     </div>
   </div>
 
@@ -231,7 +245,7 @@
 
 </div>
 
-<!-- مودال‌ها -->
+<!-- مودال پروفایل -->
 <div class="modal" id="profileModal">
   <div class="modal-content">
     <h3>ویرایش پروفایل</h3>
@@ -242,6 +256,7 @@
   </div>
 </div>
 
+<!-- مودال ساخت گروه -->
 <div class="modal" id="createGroupModal">
   <div class="modal-content">
     <h3>ساخت گروه جدید</h3>
@@ -253,6 +268,7 @@
   </div>
 </div>
 
+<!-- مودال ساخت کانال -->
 <div class="modal" id="createChannelModal">
   <div class="modal-content">
     <h3>ساخت کانال جدید</h3>
@@ -262,6 +278,7 @@
   </div>
 </div>
 
+<!-- مودال لینک دعوت -->
 <div class="modal" id="inviteModal">
   <div class="modal-content">
     <h3>لینک دعوت</h3>
@@ -271,12 +288,21 @@
   </div>
 </div>
 
+<!-- مودال مدیریت -->
 <div class="modal" id="adminModal">
   <div class="modal-content">
     <h3>⚠️ پنل مدیریت</h3>
+    
+    <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">حذف کاربران (با کلیک روی دکمه حذف، کاربر از برنامه بیرون انداخته می‌شود):</p>
+    <div class="admin-user-list" id="adminUserList"></div>
+
+    <hr style="border-color:#333; margin:15px 0;">
+    <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">پاک کردن کلی:</p>
+    
     <label class="admin-check"><input type="checkbox" id="delMessages"> پاک کردن تمام پیام‌ها</label>
     <label class="admin-check"><input type="checkbox" id="delGroups"> پاک کردن تمام گروه‌ها و کانال‌ها</label>
     <label class="admin-check"><input type="checkbox" id="delUsers"> پاک کردن تمام حساب‌های کاربری</label>
+    
     <button class="admin-btn-danger" onclick="executeReset()">🗑️ پاک کردن موارد انتخاب شده</button>
     <button class="cancel" onclick="closeModal('adminModal')">انصراف</button>
   </div>
@@ -321,34 +347,30 @@
     document.getElementById('statusTime').innerText = timeStr;
   };
 
-  // ✅ بیدار کردن مرورگر با فایل صوتی سکوت
   function unlockAudio() {
     const silent = document.getElementById('silentAudio');
     silent.volume = 0;
     silent.play().then(() => {
       silent.pause();
       silent.currentTime = 0;
-      console.log("✅ مرورگر برای پخش صدا آماده شد.");
-    }).catch(e => console.log("مرورگر اجازه بیدار شدن نداد."));
+    }).catch(e => {});
   }
 
-  // دکمه تست صدا
   function testSound() {
     const sound = document.getElementById('notifSound');
     sound.currentTime = 0;
     sound.play().then(() => {
       alert("✅ صدا با موفقیت پخش شد. حالا مرورگر برای پیام‌های جدید آماده است.");
     }).catch(e => {
-      alert("❌ مرورگر اجازه پخش صدا را نداد. لطفاً صدای گوشی را چک کنید و دوباره امتحان کنید.");
+      alert("❌ مرورگر اجازه پخش صدا را نداد. لطفاً صدای گوشی را چک کنید.");
     });
   }
 
   async function goToLogin() {
-    unlockAudio(); // بیدار کردن مرورگر
+    unlockAudio();
     await syncGlobalTime();
     updateStatusTime();
     setInterval(updateStatusTime, 10000);
-
     document.getElementById('splashScreen').style.opacity = '0';
     setTimeout(() => {
       document.getElementById('splashScreen').style.display = 'none';
@@ -371,7 +393,7 @@
   }
 
   async function login() {
-    unlockAudio(); // بیدار کردن مرورگر موقع لاگین
+    unlockAudio();
     const username = document.getElementById('usernameInput').value.trim();
     if (!username) return alert("اسم را وارد کنید");
     const { data: profiles } = await db.from('profiles').select('*');
@@ -532,7 +554,7 @@
   }
 
   function openChat(item) {
-    unlockAudio(); // بیدار کردن مرورگر موقع باز کردن چت
+    unlockAudio();
     currentChat = item;
     isGroup = item.isGroup;
     isChannel = item.isChannel;
@@ -600,20 +622,19 @@
           msgDiv.className = `msg ${m.sender_id === currentUser.id ? 'sent' : 'received'}`;
           msgDiv.innerHTML = safeHtml;
           
-          if (m.sender_id === currentUser.id) {
-            msgDiv.oncontextmenu = (e) => {
-              e.preventDefault();
-              showDeleteMenu(e, m.id);
-            };
-            let touchTimer;
-            msgDiv.ontouchstart = (e) => {
-              touchTimer = setTimeout(() => {
-                showDeleteMenu(e.touches[0], m.id);
-              }, 800);
-            };
-            msgDiv.ontouchend = () => clearTimeout(touchTimer);
-            msgDiv.ontouchmove = () => clearTimeout(touchTimer);
-          }
+          // ✅ قابلیت نگه داشتن برای حذف (برای همه پیام‌ها)
+          msgDiv.oncontextmenu = (e) => {
+            e.preventDefault();
+            showConfirmBar(m.id);
+          };
+          let touchTimer;
+          msgDiv.ontouchstart = (e) => {
+            touchTimer = setTimeout(() => {
+              showConfirmBar(m.id);
+            }, 600); // 0.6 ثانیه نگه داشتن
+          };
+          msgDiv.ontouchend = () => clearTimeout(touchTimer);
+          msgDiv.ontouchmove = () => clearTimeout(touchTimer);
 
           wrapper.appendChild(msgDiv);
           
@@ -630,32 +651,24 @@
     }
   }
 
-  function showDeleteMenu(e, msgId) {
+  // ✅ نمایش نوار تایید حذف
+  function showConfirmBar(msgId) {
     msgToDelete = msgId;
-    const menu = document.getElementById('deleteMenu');
-    menu.style.display = 'block';
-    let x = e.clientX || e.pageX;
-    let y = e.clientY || e.pageY;
-    menu.style.left = x + 'px';
-    menu.style.top = y + 'px';
-    setTimeout(() => {
-      document.addEventListener('click', closeDeleteMenu, { once: true });
-    }, 100);
+    document.getElementById('confirmBar').style.display = 'flex';
   }
 
-  function closeDeleteMenu() {
-    document.getElementById('deleteMenu').style.display = 'none';
+  function cancelDelete() {
+    document.getElementById('confirmBar').style.display = 'none';
     msgToDelete = null;
   }
 
   async function confirmDelete() {
     if (!msgToDelete) return;
-    if (!confirm("آیا از حذف این پیام مطمئنی؟")) return;
     try {
       const { error } = await db.from('messages').delete().eq('id', msgToDelete);
       if (error) throw error;
+      cancelDelete();
       loadMessages(true); 
-      closeDeleteMenu();
     } catch (err) {
       alert("❌ خطا در حذف پیام: " + err.message);
     }
@@ -762,14 +775,37 @@
 
   function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-  function openAdminPanel() {
+  // ====== پنل مدیریت ======
+  async function openAdminPanel() {
     const pass = prompt("رمز مدیریت:");
     if (pass === "nimaaslani1234A") {
+      // پر کردن لیست کاربران برای حذف
+      const listDiv = document.getElementById('adminUserList');
+      listDiv.innerHTML = allUsers.map(u => 
+        `<div class="admin-user-item">
+          <span>${u.avatar} ${u.name}</span>
+          <button onclick="deleteUser('${u.id}', '${u.name}')">حذف</button>
+        </div>`
+      ).join('');
+      
       document.getElementById('delMessages').checked = false;
       document.getElementById('delGroups').checked = false;
       document.getElementById('delUsers').checked = false;
       document.getElementById('adminModal').style.display = 'flex';
     } else if (pass !== null) alert("❌ رمز اشتباه است!");
+  }
+
+  async function deleteUser(id, name) {
+    if (!confirm(`آیا مطمئنی می‌خوای حساب "${name}" رو برای همیشه پاک کنی؟`)) return;
+    try {
+      await db.from('messages').delete().or(`sender_id.eq.${id},receiver_id.eq.${id}`);
+      await db.from('profiles').delete().eq('id', id);
+      alert(`✅ حساب ${name} پاک شد!`);
+      loadUsers();
+      closeModal('adminModal');
+    } catch (err) {
+      alert("❌ خطا در حذف کاربر: " + err.message);
+    }
   }
 
   async function executeReset() {

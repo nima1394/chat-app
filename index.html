@@ -13,6 +13,20 @@
   
   .app { width: 100%; max-width: 420px; height: 100vh; max-height: 850px; background: var(--dark); color: white; display: flex; flex-direction: column; position: relative; overflow: hidden; }
 
+  /* ====== داینامیک آیلند (بیضی بالای صفحه مثل آیفون) ====== */
+  .dynamic-island {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 30px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 20000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  }
+
   /* ====== صفحه لودینگ ====== */
   #splashScreen { position: absolute; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 30px; transition: opacity 0.5s; }
   .logo-icon { width: 100px; height: 100px; border: 3px solid var(--gold); border-radius: 30px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; position: relative; }
@@ -29,29 +43,11 @@
   #loginScreen button { padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; }
 
   /* ====== هدر ====== */
-  .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--dark); }
+  .header { padding: 45px 20px 15px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--dark); }
   .header .title { color: var(--gold); font-size: 1.5rem; font-weight: bold; display: flex; flex-direction: column; }
   .header .title span { font-size: 0.7rem; color: var(--text-muted); font-weight: normal; margin-top: 5px; direction: ltr; }
   .header .icons { display: flex; gap: 15px; color: var(--gold); font-size: 1.2rem; }
   
-  /* ====== دایره شبیه اپل ====== */
-  .apple-circle {
-    width: 45px; height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(243, 198, 126, 0.5);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(243, 198, 126, 0.2);
-    display: flex; justify-content: center; align-items: center;
-    cursor: pointer; transition: 0.3s;
-  }
-  .apple-circle:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(243, 198, 126, 0.4), inset 0 0 15px rgba(243, 198, 126, 0.4);
-  }
-  .apple-circle span { color: var(--gold); font-size: 1.5rem; font-weight: bold; margin-top: -5px; letter-spacing: 2px; }
-
   /* ====== جستجو ====== */
   .search-box { padding: 0 20px 15px; }
   .search-box input { width: 100%; padding: 12px 15px; border-radius: 20px; border: none; background: var(--dark-2); color: white; outline: none; font-size: 0.9rem; }
@@ -75,7 +71,7 @@
   .chat-item .info p.online-text { color: #2ecc71; font-weight: bold; }
 
   /* ====== منوی پایین ====== */
-  .bottom-nav { background: var(--dark-2); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; }
+  .bottom-nav { background: var(--dark-2); padding: 12px 20px 20px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; font-size: 0.7rem; }
   .nav-item.active { color: var(--gold); }
   .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
@@ -83,7 +79,7 @@
 
   /* ====== صفحه چت ====== */
   #chatScreen { display: none; flex-direction: column; height: 100%; background: var(--dark); position: absolute; inset: 0; z-index: 100; }
-  .chat-header { padding: 15px 20px; display: flex; align-items: center; gap: 15px; background: var(--dark-2); }
+  .chat-header { padding: 45px 20px 15px 20px; display: flex; align-items: center; gap: 15px; background: var(--dark-2); }
   .chat-header .back { color: var(--gold); font-size: 1.5rem; cursor: pointer; }
   .chat-header .chat-info { flex: 1; }
   .chat-header .chat-info h4 { font-size: 1rem; }
@@ -125,6 +121,9 @@
 
 <div class="app">
   
+  <!-- داینامیک آیلند -->
+  <div class="dynamic-island"></div>
+
   <!-- فایل صوتی برای صدای پیام -->
   <audio id="notifSound" src="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/homework/notif.mp3.mp3"></audio>
 
@@ -143,13 +142,7 @@
 
   <div id="mainScreen" style="display:none; flex-direction:column; height:100%;">
     <div class="header">
-      <div style="display:flex; align-items:center; gap:15px;">
-        <!-- دایره شبیه اپل -->
-        <div class="apple-circle" onclick="openProfile()">
-          <span>...</span>
-        </div>
-        <div class="title">رودینو <span id="globalClock">در حال دریافت ساعت...</span></div>
-      </div>
+      <div class="title">رودینو <span id="globalClock">در حال دریافت ساعت...</span></div>
       <div class="icons">
         <span style="cursor:pointer;" onclick="openAdminPanel()">⚙️</span>
         <span style="cursor:pointer;" onclick="openCreateGroup()">👥+</span>
@@ -183,7 +176,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
-      <div class="version-tag">v2.2.0</div>
+      <div class="version-tag">v2.3.0</div>
     </div>
   </div>
 

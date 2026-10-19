@@ -68,14 +68,19 @@
   .chat-header .chat-info { flex: 1; }
   .chat-header .chat-info h4 { font-size: 1rem; }
   .chat-header .chat-info p { font-size: 0.75rem; color: var(--text-muted); }
+  
   .messages-area { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--dark); }
   
   .msg-wrapper { display: flex; flex-direction: column; max-width: 80%; }
   .msg-wrapper.sent { align-self: flex-start; }
   .msg-wrapper.received { align-self: flex-end; }
-  .msg { padding: 12px 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; }
+  .msg { padding: 12px 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; }
   .msg.sent { background: var(--gold); color: #000; border-bottom-left-radius: 2px; }
   .msg.received { background: var(--dark-3); color: #fff; border-bottom-right-radius: 2px; }
+  
+  /* استایل لینک‌های داخل پیام */
+  .msg a { color: #3498db; text-decoration: underline; font-weight: bold; }
+  .msg.sent a { color: #1a5276; } 
   
   .msg-meta { display: flex; justify-content: flex-end; align-items: center; gap: 5px; font-size: 0.65rem; margin-top: 5px; color: var(--text-muted); }
   .msg-wrapper.sent .msg-meta { color: #333; }
@@ -162,6 +167,8 @@
         <h4 id="chatWithName"></h4>
         <p id="chatStatus">در حال بارگذاری...</p>
       </div>
+      <!-- دکمه لینک دعوت برای گروه و کانال -->
+      <span id="chatInviteBtn" style="color:var(--gold); font-size:1.2rem; cursor:pointer; display:none;" onclick="copyCurrentInvite()" title="کپی لینک دعوت">🔗</span>
     </div>
     <div class="messages-area" id="messagesArea"></div>
     <div class="input-area">
@@ -204,6 +211,7 @@
   </div>
 </div>
 
+<!-- مودال لینک دعوت -->
 <div class="modal" id="inviteModal">
   <div class="modal-content">
     <h3>لینک دعوت</h3>
@@ -245,18 +253,8 @@
       const data = await res.json();
       const serverTime = new Date(data.datetime).getTime();
       const localTime = new Date().getTime();
-      globalTimeOffset = serverTime - localTime; // اختلاف زمان سرور با سیستم
-    } catch (e) {
-      console.log("خطا در دریافت ساعت، از ساعت سیستم استفاده می‌شود.");
-      globalTimeOffset = 0;
-    }
-  }
-
-  function getIranTime() {
-    const now = new Date().getTime() + globalTimeOffset;
-    const date = new Date(now);
-    // تبدیل به منطقه زمانی تهران
-    return date.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit' });
+      globalTimeOffset = serverTime - localTime;
+    } catch (e) { globalTimeOffset = 0; }
   }
 
   function getFullIranTime() {
@@ -265,7 +263,6 @@
     return date.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 
-  // ====== فرمت ساعت پیام ======
   const formatTime = (iso) => {
     if (!iso) return "";
     const d = new Date(iso);
@@ -274,7 +271,7 @@
 
   // ====== شروع برنامه ======
   async function goToLogin() {
-    await syncGlobalTime(); // ساعت رو ست کن
+    await syncGlobalTime();
     document.getElementById('splashScreen').style.opacity = '0';
     setTimeout(() => {
       document.getElementById('splashScreen').style.display = 'none';
@@ -323,7 +320,6 @@
     await db.from('profiles').update({ is_online: true, last_seen: new Date().toISOString() }).eq('id', currentUser.id);
     setInterval(async () => { if (currentUser) await db.from('profiles').update({ is_online: true, last_seen: new Date().toISOString() }).eq('id', currentUser.id); }, 10000);
     
-    // ساعت زنده در هدر
     setInterval(() => {
       document.getElementById('globalClock').innerText = getFullIranTime();
     }, 1000);
@@ -420,6 +416,13 @@
     document.getElementById('messagesArea').innerHTML = '';
     updateChatStatus();
 
+    // نمایش/مخفی کردن دکمه لینک دعوت در هدر چت
+    if (isGroup || isChannel) {
+      document.getElementById('chatInviteBtn').style.display = 'block';
+    } else {
+      document.getElementById('chatInviteBtn').style.display = 'none';
+    }
+
     const inputArea = document.querySelector('.input-area');
     if (isChannel) {
       db.from('channels').select('encrypted_creator_id').eq('id', item.id).single().then(({data}) => {
@@ -468,8 +471,13 @@
           const wrapper = document.createElement('div');
           wrapper.className = `msg-wrapper ${m.sender_id === currentUser.id ? 'sent' : 'received'}`;
           let tickHtml = m.sender_id === currentUser.id ? (m.is_seen ? '<span class="tick seen">✓✓</span>' : '<span class="tick">✓</span>') : '';
+          
+          // تبدیل لینک به تگ قابل کلیک
+          let rawText = dec(m.encrypted_content);
+          let safeHtml = rawText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+          
           wrapper.innerHTML = `
-            <div class="msg ${m.sender_id === currentUser.id ? 'sent' : 'received'}">${dec(m.encrypted_content)}</div>
+            <div class="msg ${m.sender_id === currentUser.id ? 'sent' : 'received'}">${safeHtml}</div>
             <div class="msg-meta"><span>${formatTime(m.created_at)}</span>${tickHtml}</div>
           `;
           area.appendChild(wrapper);
@@ -556,6 +564,24 @@
     const link = window.location.origin + window.location.pathname + `?invite=${type}&id=${id}`;
     document.getElementById('inviteLinkInput').value = link;
     document.getElementById('inviteModal').style.display = 'flex';
+  }
+
+  // تابع جدید برای کپی لینک دعوت از داخل هدر چت
+  function copyCurrentInvite() {
+    if (!currentChat) return;
+    const type = isChannel ? 'channel' : 'group';
+    const link = window.location.origin + window.location.pathname + `?invite=${type}&id=${currentChat.id}`;
+    
+    // کپی به کلیپ بورد
+    navigator.clipboard.writeText(link).then(() => {
+      alert("✅ لینک دعوت این " + (isChannel ? "کانال" : "گروه") + " کپی شد!\n\nمی‌تونی برای دوستات بفرستی:\n" + link);
+    }).catch(err => {
+      // روش پشتیبان برای مرورگرهای قدیمی
+      document.getElementById('inviteLinkInput').value = link;
+      document.getElementById('inviteLinkInput').select();
+      document.execCommand("copy");
+      alert("✅ لینک کپی شد!");
+    });
   }
 
   function copyInviteLink() {

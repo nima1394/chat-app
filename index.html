@@ -43,23 +43,25 @@
   .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
   .story .avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; background: var(--dark-2); position: relative; }
   .story span { font-size: 0.75rem; color: #ccc; }
-  .online-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--dark); background: #888; }
-  .online-dot.online { background: #2ecc71; }
+  .online-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--dark); background: #888; transition: background 0.3s; }
+  .online-dot.online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
 
   /* ====== لیست چت ====== */
   .chat-list { flex: 1; overflow-y: auto; padding: 0 15px; }
   .chat-item { display: flex; align-items: center; padding: 15px; border-radius: 15px; cursor: pointer; margin-bottom: 5px; }
   .chat-item:hover { background: var(--dark-2); }
-  .chat-item .avatar { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: var(--dark-3); }
+  .chat-item .avatar { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: var(--dark-3); position: relative; }
   .chat-item .avatar.channel { border-radius: 12px; background: var(--blue); color: white; }
   .chat-item .info h4 { font-size: 1rem; color: #fff; margin-bottom: 5px; }
-  .chat-item .info p { font-size: 0.8rem; color: var(--text-muted); }
+  .chat-item .info p { font-size: 0.8rem; color: var(--text-muted); transition: color 0.3s; }
+  .chat-item .info p.online-text { color: #2ecc71; font-weight: bold; }
 
   /* ====== منوی پایین ====== */
-  .bottom-nav { background: var(--dark-2); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; }
+  .bottom-nav { background: var(--dark-2); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; font-size: 0.7rem; }
   .nav-item.active { color: var(--gold); }
   .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+  .version-tag { font-size: 0.6rem; color: #555; margin-top: 5px; }
 
   /* ====== صفحه چت ====== */
   #chatScreen { display: none; flex-direction: column; height: 100%; background: var(--dark); position: absolute; inset: 0; z-index: 100; }
@@ -67,8 +69,8 @@
   .chat-header .back { color: var(--gold); font-size: 1.5rem; cursor: pointer; }
   .chat-header .chat-info { flex: 1; }
   .chat-header .chat-info h4 { font-size: 1rem; }
-  .chat-header .chat-info p { font-size: 0.75rem; color: var(--text-muted); }
-  
+  .chat-header .chat-info p { font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s; }
+  .chat-header .chat-info p.online-text { color: #2ecc71; }
   .messages-area { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--dark); }
   
   .msg-wrapper { display: flex; flex-direction: column; max-width: 80%; }
@@ -77,10 +79,8 @@
   .msg { padding: 12px 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; }
   .msg.sent { background: var(--gold); color: #000; border-bottom-left-radius: 2px; }
   .msg.received { background: var(--dark-3); color: #fff; border-bottom-right-radius: 2px; }
-  
-  /* استایل لینک‌های داخل پیام */
   .msg a { color: #3498db; text-decoration: underline; font-weight: bold; }
-  .msg.sent a { color: #1a5276; } 
+  .msg.sent a { color: #1a5276; }
   
   .msg-meta { display: flex; justify-content: flex-end; align-items: center; gap: 5px; font-size: 0.65rem; margin-top: 5px; color: var(--text-muted); }
   .msg-wrapper.sent .msg-meta { color: #333; }
@@ -156,6 +156,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
+      <div class="version-tag">v2.1.0</div>
     </div>
   </div>
 
@@ -167,7 +168,6 @@
         <h4 id="chatWithName"></h4>
         <p id="chatStatus">در حال بارگذاری...</p>
       </div>
-      <!-- دکمه لینک دعوت برای گروه و کانال -->
       <span id="chatInviteBtn" style="color:var(--gold); font-size:1.2rem; cursor:pointer; display:none;" onclick="copyCurrentInvite()" title="کپی لینک دعوت">🔗</span>
     </div>
     <div class="messages-area" id="messagesArea"></div>
@@ -205,17 +205,14 @@
   <div class="modal-content">
     <h3>ساخت کانال جدید</h3>
     <input type="text" id="channelName" placeholder="اسم کانال">
-    <p style="font-size:0.8rem; color:#888; margin-bottom:10px;">لینک دعوت برای کانال شما ساخته می‌شود. فقط شما می‌توانید پیام بفرستید.</p>
     <button onclick="createChannel()">ساخت کانال</button>
     <button class="cancel" onclick="closeModal('createChannelModal')">انصراف</button>
   </div>
 </div>
 
-<!-- مودال لینک دعوت -->
 <div class="modal" id="inviteModal">
   <div class="modal-content">
     <h3>لینک دعوت</h3>
-    <p style="font-size: 0.8rem; margin-bottom: 10px; color:#aaa;">این لینک را برای دوستت بفرست تا وارد گروه/کانال شود.</p>
     <input type="text" id="inviteLinkInput" readonly style="direction:ltr; text-align:center; background:#111;">
     <button onclick="copyInviteLink()">📋 کپی لینک</button>
     <button class="cancel" onclick="closeModal('inviteModal')">بستن</button>
@@ -246,21 +243,12 @@
   const enc = (t) => t.split('').map(c => c.charCodeAt(0).toString(2).padStart(16, '0')).join(' ');
   const dec = (b) => !b ? "" : b.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
 
-  // ====== ساعت جهانی ======
   async function syncGlobalTime() {
     try {
       const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran');
       const data = await res.json();
-      const serverTime = new Date(data.datetime).getTime();
-      const localTime = new Date().getTime();
-      globalTimeOffset = serverTime - localTime;
+      globalTimeOffset = new Date(data.datetime).getTime() - new Date().getTime();
     } catch (e) { globalTimeOffset = 0; }
-  }
-
-  function getFullIranTime() {
-    const now = new Date().getTime() + globalTimeOffset;
-    const date = new Date(now);
-    return date.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 
   const formatTime = (iso) => {
@@ -269,7 +257,11 @@
     return d.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit' });
   };
 
-  // ====== شروع برنامه ======
+  const getFullIranTime = () => {
+    const date = new Date(new Date().getTime() + globalTimeOffset);
+    return date.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  };
+
   async function goToLogin() {
     await syncGlobalTime();
     document.getElementById('splashScreen').style.opacity = '0';
@@ -317,19 +309,39 @@
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainScreen').style.display = 'flex';
     document.getElementById('myStoryAvatar').innerText = currentUser.avatar;
-    await db.from('profiles').update({ is_online: true, last_seen: new Date().toISOString() }).eq('id', currentUser.id);
-    setInterval(async () => { if (currentUser) await db.from('profiles').update({ is_online: true, last_seen: new Date().toISOString() }).eq('id', currentUser.id); }, 10000);
     
+    // آنلاین کردن کاربر
+    await db.from('profiles').update({ is_online: true }).eq('id', currentUser.id);
+    
+    // به روزرسانی ساعت
     setInterval(() => {
       document.getElementById('globalClock').innerText = getFullIranTime();
     }, 1000);
     
     loadUsers();
-    setInterval(loadUsers, 5000);
+    
+    // ====== سیستم لحظه‌ای (Realtime) برای وضعیت آنلاین/آفلاین ======
+    db.channel('online-users')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
+        const updatedUser = payload.new;
+        // آپدیت لیست ما
+        const userIndex = allUsers.findIndex(u => u.id === updatedUser.id);
+        if (userIndex !== -1) {
+          allUsers[userIndex].is_online = updatedUser.is_online;
+          allUsers[userIndex].last_seen = updatedUser.last_seen;
+          renderList(combinedList);
+          renderStories(allUsers);
+          if (currentChat && currentChat.id === updatedUser.id) updateChatStatus();
+        }
+      })
+      .subscribe();
   }
 
+  // آفلاین کردن کاربر موقع بستن سایت
   window.addEventListener('beforeunload', () => {
-    if (currentUser) db.from('profiles').update({ is_online: false, last_seen: new Date().toISOString() }).eq('id', currentUser.id);
+    if (currentUser) {
+      db.from('profiles').update({ is_online: false, last_seen: new Date().toISOString() }).eq('id', currentUser.id);
+    }
   });
 
   function showTab(tab) {
@@ -341,7 +353,7 @@
 
   async function loadUsers() {
     const { data: profiles } = await db.from('profiles').select('*').neq('id', currentUser.id);
-    allUsers = profiles.map(p => ({ id: p.id, name: dec(p.encrypted_data), avatar: p.encrypted_avatar ? dec(p.encrypted_avatar) : "😊", isGroup: false, isChannel: false, is_online: p.is_online }));
+    allUsers = profiles.map(p => ({ id: p.id, name: dec(p.encrypted_data), avatar: p.encrypted_avatar ? dec(p.encrypted_avatar) : "😊", isGroup: false, isChannel: false, is_online: p.is_online, last_seen: p.last_seen }));
 
     const { data: groups } = await db.from('groups').select('*');
     const myGroups = groups.filter(g => { try { return JSON.parse(dec(g.encrypted_members)).includes(currentUser.id); } catch(e) { return false; } })
@@ -359,12 +371,18 @@
 
   function updateChatStatus() {
     if(isGroup) { document.getElementById('chatStatus').innerText = "گروه"; return; }
-    if(isChannel) { document.getElementById('chatStatus').innerText = "کانال (فقط ادمین)"; return; }
+    if(isChannel) { document.getElementById('chatStatus').innerText = "کانال"; return; }
     const user = allUsers.find(u => u.id === currentChat.id);
     if (!user) return;
     const statusEl = document.getElementById('chatStatus');
-    statusEl.innerText = user.is_online ? "آنلاین" : `آخرین بازدید: ${formatTime(user.last_seen)}`;
-    statusEl.style.color = user.is_online ? "#2ecc71" : "var(--text-muted)";
+    
+    if (user.is_online) {
+      statusEl.innerText = "آنلاین";
+      statusEl.className = "online-text";
+    } else {
+      statusEl.innerText = `آخرین بازدید: ${formatTime(user.last_seen)}`;
+      statusEl.className = "";
+    }
   }
 
   function renderStories(users) {
@@ -390,11 +408,15 @@
       const div = document.createElement('div');
       div.className = 'chat-item';
       div.onclick = () => openChat(u);
+      
+      let statusHtml = u.isChannel ? '<p>کانال</p>' : u.isGroup ? '<p>گروه</p>' : 
+        `<p class="${u.is_online ? 'online-text' : ''}">${u.is_online ? '🟢 آنلاین' : '⚪ آفلاین'}</p>`;
+
       div.innerHTML = `
         <div class="avatar ${u.isChannel ? 'channel' : ''}">${u.avatar}</div>
         <div class="info">
           <h4>${u.name} ${u.isChannel ? '📢' : u.isGroup ? '👥' : ''}</h4>
-          <p>${u.isChannel ? 'کانال' : u.isGroup ? 'گروه' : (u.is_online ? 'آنلاین' : 'آفلاین')}</p>
+          ${statusHtml}
         </div>`;
       list.appendChild(div);
     });
@@ -416,12 +438,7 @@
     document.getElementById('messagesArea').innerHTML = '';
     updateChatStatus();
 
-    // نمایش/مخفی کردن دکمه لینک دعوت در هدر چت
-    if (isGroup || isChannel) {
-      document.getElementById('chatInviteBtn').style.display = 'block';
-    } else {
-      document.getElementById('chatInviteBtn').style.display = 'none';
-    }
+    document.getElementById('chatInviteBtn').style.display = (isGroup || isChannel) ? 'block' : 'none';
 
     const inputArea = document.querySelector('.input-area');
     if (isChannel) {
@@ -471,8 +488,6 @@
           const wrapper = document.createElement('div');
           wrapper.className = `msg-wrapper ${m.sender_id === currentUser.id ? 'sent' : 'received'}`;
           let tickHtml = m.sender_id === currentUser.id ? (m.is_seen ? '<span class="tick seen">✓✓</span>' : '<span class="tick">✓</span>') : '';
-          
-          // تبدیل لینک به تگ قابل کلیک
           let rawText = dec(m.encrypted_content);
           let safeHtml = rawText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
           
@@ -566,17 +581,13 @@
     document.getElementById('inviteModal').style.display = 'flex';
   }
 
-  // تابع جدید برای کپی لینک دعوت از داخل هدر چت
   function copyCurrentInvite() {
     if (!currentChat) return;
     const type = isChannel ? 'channel' : 'group';
     const link = window.location.origin + window.location.pathname + `?invite=${type}&id=${currentChat.id}`;
-    
-    // کپی به کلیپ بورد
     navigator.clipboard.writeText(link).then(() => {
-      alert("✅ لینک دعوت این " + (isChannel ? "کانال" : "گروه") + " کپی شد!\n\nمی‌تونی برای دوستات بفرستی:\n" + link);
+      alert("✅ لینک کپی شد!");
     }).catch(err => {
-      // روش پشتیبان برای مرورگرهای قدیمی
       document.getElementById('inviteLinkInput').value = link;
       document.getElementById('inviteLinkInput').select();
       document.execCommand("copy");

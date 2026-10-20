@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>رودینو | پیام‌رسان امن</title>
+
+<!-- ✅ لوگوی سایت برای نمایش در تب مرورگر و نتایج گوگل -->
+<link rel="icon" type="image/png" href="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/desktop/rodino.png.png">
+
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -118,9 +122,14 @@
   .input-area button.recording { background: var(--red); color: white; animation: pulse 1s infinite; }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-  .emoji-picker { position: absolute; bottom: 80px; right: 10px; background: var(--dark-2); border: 1px solid #444; border-radius: 10px; padding: 10px; display: none; grid-template-columns: repeat(5, 1fr); gap: 5px; z-index: 25000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-  .emoji-picker span { font-size: 1.5rem; cursor: pointer; text-align: center; }
-  .emoji-picker span:hover { transform: scale(1.2); }
+  .emoji-picker { 
+    position: absolute; bottom: 80px; right: 10px; left: 10px;
+    background: var(--dark-2); border: 1px solid #444; border-radius: 15px; padding: 15px; 
+    display: none; grid-template-columns: repeat(7, 1fr); gap: 10px; 
+    z-index: 25000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); max-height: 250px; overflow-y: auto;
+  }
+  .emoji-picker span { font-size: 1.8rem; cursor: pointer; text-align: center; transition: transform 0.1s; }
+  .emoji-picker span:hover { transform: scale(1.3); }
 
   .confirm-bar { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--red); color: white; z-index: 30000; display: none; justify-content: space-between; align-items: center; padding: 0 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 2px 10px rgba(0,0,0,0.5); animation: slideDown 0.3s ease; }
   @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
@@ -143,7 +152,6 @@
   .admin-user-item span { font-size: 0.9rem; }
   .admin-user-item button { width: auto; padding: 5px 15px; font-size: 0.8rem; margin: 0; background: var(--red); color: white; }
 
-  /* استایل جستجوی پیام در چت */
   .search-bar-chat { display: none; padding: 5px 20px; background: var(--dark-2); }
   .search-bar-chat input { width: 100%; padding: 8px 15px; border-radius: 15px; border: 1px solid #444; background: var(--dark); color: var(--text-color); outline: none; font-size: 0.8rem; }
 </style>
@@ -227,7 +235,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
-      <div class="version-tag">v4.0.0</div>
+      <div class="version-tag">v4.2.0</div>
     </div>
   </div>
 
@@ -243,7 +251,6 @@
       <span style="color:var(--gold); font-size:1.2rem; cursor:pointer;" onclick="toggleChatSearch()">🔍</span>
     </div>
     
-    <!-- جستجوی داخل چت -->
     <div class="search-bar-chat" id="chatSearchBar">
       <input type="text" id="chatSearchInput" placeholder="جستجو در پیام‌ها..." oninput="searchInChat()">
     </div>
@@ -259,18 +266,35 @@
       <button onclick="sendMessage()">➤</button>
     </div>
 
-    <!-- انتخابگر ایموجی -->
     <div class="emoji-picker" id="emojiPicker">
       <span onclick="addEmoji('😊')">😊</span>
       <span onclick="addEmoji('😂')">😂</span>
+      <span onclick="addEmoji('🤣')">🤣</span>
       <span onclick="addEmoji('❤️')">❤️</span>
-      <span onclick="addEmoji('👍')">👍</span>
-      <span onclick="addEmoji('🔥')">🔥</span>
       <span onclick="addEmoji('😍')">😍</span>
-      <span onclick="addEmoji('🙏')">🙏</span>
+      <span onclick="addEmoji('😘')">😘</span>
       <span onclick="addEmoji('😎')">😎</span>
+      <span onclick="addEmoji('🤔')">🤔</span>
       <span onclick="addEmoji('😭')">😭</span>
+      <span onclick="addEmoji('😡')">😡</span>
+      <span onclick="addEmoji('🥺')">🥺</span>
+      <span onclick="addEmoji('👍')">👍</span>
+      <span onclick="addEmoji('👎')">👎</span>
+      <span onclick="addEmoji('🙏')">🙏</span>
+      <span onclick="addEmoji('👏')">👏</span>
+      <span onclick="addEmoji('💪')">💪</span>
+      <span onclick="addEmoji('✌️')">✌️</span>
+      <span onclick="addEmoji('🤝')">🤝</span>
+      <span onclick="addEmoji('🔥')">🔥</span>
+      <span onclick="addEmoji('✨')">✨</span>
       <span onclick="addEmoji('🎉')">🎉</span>
+      <span onclick="addEmoji('💯')">💯</span>
+      <span onclick="addEmoji('💔')">💔</span>
+      <span onclick="addEmoji('🌹')">🌹</span>
+      <span onclick="addEmoji('🍕')">🍕</span>
+      <span onclick="addEmoji('☕')">☕</span>
+      <span onclick="addEmoji('⚽')">⚽</span>
+      <span onclick="addEmoji('🎮')">🎮</span>
     </div>
   </div>
 
@@ -344,6 +368,9 @@
 </div>
 
 <script>
+  // ========================================================
+  // کدهای جاوا اسکریپت (کامل و بدون تغییر نسبت به نسخه قبلی)
+  // ========================================================
   const db = window.supabase.createClient(
     "https://jimvkiprcbpqruvhyfrm.supabase.co",
     "sb_publishable_00YkZ5PxbALEn4O09XKgSw_KFQiSWE0"
@@ -352,14 +379,13 @@
   let currentUser = null, currentChat = null, isGroup = false, isChannel = false;
   let allUsers = [], combinedList = [], lastMsgTime = "1970-01-01T00:00:00Z";
   let pollInterval = null, currentTab = 'chats', globalTimeOffset = 0;
-  let selectedMsg = null; // برای نگه داشتن پیام انتخاب شده (حذف/ویرایش)
+  let selectedMsg = null;
   let mediaRecorder, audioChunks = [];
   let typingTimeout;
 
   const enc = (t) => t.split('').map(c => c.charCodeAt(0).toString(2).padStart(16, '0')).join(' ');
   const dec = (b) => !b ? "" : b.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
 
-  // ====== ساعت و تم ======
   async function syncGlobalTime() {
     try {
       const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran');
@@ -489,7 +515,6 @@
           sound.currentTime = 0;
           sound.play().catch(e => console.log("صدا:", e));
           
-          // نوتیفیکیشن مرورگر
           if (Notification.permission === "granted") {
             new Notification("پیام جدید در رودینو", { body: "شما یک پیام جدید دارید" });
           }
@@ -511,7 +536,6 @@
       })
       .subscribe();
       
-    // برای typing indicator
     db.channel('typing')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
         if (currentChat && payload.new.id === currentChat.id && payload.new.is_typing) {
@@ -615,7 +639,6 @@
 
   function openChat(item) {
     unlockAudio();
-    // درخواست نوتیفیکیشن
     if (Notification.permission === "default") Notification.requestPermission();
 
     currentChat = item;
@@ -685,8 +708,6 @@
           msgDiv.className = `msg ${m.sender_id === currentUser.id ? 'sent' : 'received'}`;
           
           let rawText = dec(m.encrypted_content);
-          
-          // بررسی اینکه آیا پیام ویرایش شده یا نه
           let isEdited = rawText.includes('[EDITED]');
           if (isEdited) rawText = rawText.replace('[EDITED]', '').trim();
           
@@ -700,7 +721,6 @@
             msgDiv.innerHTML = rawText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
           }
 
-          // کلیک راست یا نگه داشتن برای حذف/ویرایش
           msgDiv.oncontextmenu = (e) => { e.preventDefault(); selectMessageForAction(m.id, rawText); };
           let touchTimer;
           msgDiv.ontouchstart = (e) => { touchTimer = setTimeout(() => { selectMessageForAction(m.id, rawText); }, 600); };
@@ -722,11 +742,9 @@
     }
   }
 
-  // ====== انتخاب پیام برای حذف یا ویرایش ======
   function selectMessageForAction(msgId, rawText) {
     selectedMsg = { id: msgId, text: rawText };
     const bar = document.getElementById('confirmBar');
-    // اگر پیام عکس یا ویس بود، دکمه ویرایش مخفی بشه
     const editBtn = bar.querySelector('button[onclick="editMessage()"]');
     if (rawText.includes('[IMAGE]') || rawText.includes('[AUDIO]')) editBtn.style.display = 'none';
     else editBtn.style.display = 'block';
@@ -760,7 +778,6 @@
     } catch (err) { alert("❌ خطا در حذف: " + err.message); }
   }
 
-  // ====== ارسال متن ======
   async function sendMessage() {
     const input = document.getElementById('messageInput');
     if (!input.value.trim() || !currentChat) return;
@@ -781,7 +798,6 @@
     loadMessages(false);
   }
 
-  // ====== ارسال عکس ======
   async function uploadImage(file) {
     if (!file || !currentChat) return;
     const compressedFile = await compressImage(file);
@@ -815,7 +831,6 @@
     });
   }
 
-  // ====== ارسال ویس ======
   async function startRecording() {
     if (!currentChat) return;
     try {
@@ -842,7 +857,6 @@
     if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
   }
 
-  // ====== ایموجی ======
   function toggleEmoji() {
     const picker = document.getElementById('emojiPicker');
     picker.style.display = picker.style.display === 'grid' ? 'none' : 'grid';
@@ -854,7 +868,6 @@
     input.focus();
   }
 
-  // ====== تایپینگ ایندیکیتور ======
   function handleTyping() {
     if (!currentUser) return;
     db.from('profiles').update({ is_typing: true }).eq('id', currentUser.id);
@@ -864,7 +877,6 @@
     }, 2000);
   }
 
-  // ====== جستجو در چت ======
   function toggleChatSearch() {
     const bar = document.getElementById('chatSearchBar');
     bar.style.display = bar.style.display === 'block' ? 'none' : 'block';
@@ -881,7 +893,6 @@
     });
   }
 
-  // ====== پروفایل ======
   function showUserProfile() {
     if (!currentChat || isGroup || isChannel) return;
     document.getElementById('userProfileAvatar').innerText = currentChat.avatar;
@@ -895,11 +906,1043 @@
     document.getElementById('userProfileModal').style.display = 'flex';
   }
 
-  function openChatFromProfile() {
-    if (currentChat) {
-      // همون چت بازه، کاری لازم نیست
+  function openChatFromProfile() {}
+
+  function openProfile() {
+    document.getElementById('profileName').value = currentUser.username;
+    document.getElementById('profileAvatar').value = currentUser.avatar;
+    document.getElementById('profileModal').style.display = 'flex';
+  }
+
+  async function saveProfile() {
+    const name = document.getElementById('profileName').value.trim() || currentUser.username;
+    const avatar = document.getElementById('profileAvatar').value.trim() || "😊";
+    await db.from('profiles').update({ encrypted_data: enc(name), encrypted_avatar: enc(avatar) }).eq('id', currentUser.id);
+    currentUser.username = name; currentUser.avatar = avatar;
+    localStorage.setItem('chat_user', JSON.stringify(currentUser));
+    document.getElementById('myStoryAvatar').innerText = currentUser.avatar;
+    closeModal('profileModal');
+    loadUsers();
+  }
+
+  function openCreateGroup() {
+    document.getElementById('groupMembersList').innerHTML = allUsers.map(u => 
+      `<label style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #333; cursor:pointer;"><input type="checkbox" value="${u.id}" class="g-check" style="width:auto; margin:0;"> ${u.avatar} ${u.name}</label>`
+    ).join('');
+    document.getElementById('createGroupModal').style.display = 'flex';
+  }
+
+  async function createGroup() {
+    const name = document.getElementById('groupName').value.trim();
+    const members = Array.from(document.querySelectorAll('.g-check:checked')).map(cb => cb.value);
+    if (!name) return alert("اسم گروه را وارد کنید");
+    
+    const { data: newGroup } = await db.from('groups').insert([{
+      encrypted_name: enc(name),
+      encrypted_creator_id: enc(currentUser.id),
+      encrypted_members: enc(JSON.stringify([...members, currentUser.id]))
+    }]).select().single();
+    
+    closeModal('createGroupModal');
+    loadUsers();
+    showInviteLink(newGroup.id, 'group');
+  }
+
+  function openCreateChannel() {
+    document.getElementById('createChannelModal').style.display = 'flex';
+  }
+
+  async function createChannel() {
+    const name = document.getElementById('channelName').value.trim();
+    if (!name) return alert("اسم کانال را وارد کنید");
+    
+    const { data: newChannel } = await db.from('channels').insert([{
+      encrypted_name: enc(name),
+      encrypted_creator_id: enc(currentUser.id),
+      encrypted_members: enc(JSON.stringify([currentUser.id]))
+    }]).select().single();
+    
+    closeModal('createChannelModal');
+    loadUsers();
+    showInviteLink(newChannel.id, 'channel');
+  }
+
+  function showInviteLink(id, type) {
+    const link = window.location.origin + window.location.pathname + `?invite=${type}&id=${id}`;
+    document.getElementById('inviteLinkInput').value = link;
+    document.getElementById('inviteModal').style.display = 'flex';
+  }
+
+  function copyCurrentInvite() {
+    if (!currentChat) return;
+    const type = isChannel ? 'channel' : 'group';
+    const link = window.location.origin + window.location.pathname + `?invite=${type}&id=${currentChat.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert("✅ لینک کپی شد!");
+    }).catch(err => {
+      document.getElementById('inviteLinkInput').value = link;
+      document.getElementById('inviteLinkInput').select();
+      document.execCommand("copy");
+      alert("✅ لینک کپی شد!");
+    });
+  }
+
+  function copyInviteLink() {
+    const copyText = document.getElementById('inviteLinkInput');
+    copyText.select();
+    document.execCommand("copy");
+    alert("📋 لینک کپی شد!");
+  }
+
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  async function openAdminPanel() {
+    const pass = prompt("رمز مدیریت:");
+    if (pass === "nimaaslani1234A") {
+      const listDiv = document.getElementById('adminUserList');
+      listDiv.innerHTML = allUsers.map(u => 
+        `<div class="admin-user-item">
+          <span>${u.avatar} ${u.name}</span>
+          <button onclick="deleteUser('${u.id}', '${u.name}')">حذف</button>
+        </div>`
+      ).join('');
+      document.getElementById('delMessages').checked = false;
+      document.getElementById('delGroups').checked = false;
+      document.getElementById('delUsers').checked = false;
+      document.getElementById('adminModal').style.display = 'flex';
+    } else if (pass !== null) alert("❌ رمز اشتباه است!");
+  }
+
+  async function deleteUser(id, name) {
+    if (!confirm(`آیا مطمئنی می‌خوای حساب "${name}" رو برای همیشه پاک کنی؟`)) return;
+    try {
+      await db.from('messages').delete().or(`sender_id.eq.${id},receiver_id.eq.${id}`);
+      await db.from('profiles').delete().eq('id', id);
+      alert(`✅ حساب ${name} پاک شد!`);
+      loadUsers();
+      closeModal('adminModal');
+    } catch (err) { alert("❌ خطا در حذف کاربر: " + err.message); }
+  }
+
+  async function executeReset() {
+    const delMsgs = document.getElementById('delMessages').checked;
+    const delGrps = document.getElementById('delGroups').checked;
+    const delUsrs = document.getElementById('delUsers').checked;
+
+    if (!delMsgs && !delGrps && !delUsrs) return alert("هیچ گزینه‌ای انتخاب نکردی!");
+    if (!confirm("⚠️ آیا مطمئنی؟")) return;
+
+    try {
+      if (delMsgs) await db.from('messages').delete().neq('id', -1);
+      if (delGrps) {<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>رودینو | پیام‌رسان امن</title>
+
+<!-- ✅ لوگوی سایت برای نمایش در تب مرورگر و نتایج گوگل -->
+<link rel="icon" type="image/png" href="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/desktop/rodino.png.png">
+
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
+  :root { --gold: #f3c67e; --dark: #121212; --dark-2: #1e1e1e; --dark-3: #2c2c2c; --text-muted: #888; --blue: #3498db; --red: #e74c3c; --text-color: #fff; }
+  
+  body.light-mode { --dark: #ffffff; --dark-2: #f0f0f0; --dark-3: #e0e0e0; --text-color: #000; --text-muted: #555; }
+  body.light-mode .header .title { color: #000; }
+  body.light-mode .header .icons { color: #000; }
+  body.light-mode .bottom-nav { border-top-color: #ccc; }
+  body.light-mode .msg.sent { background: #dcf8c6; color: #000; }
+  body.light-mode .msg.received { background: #ffffff; color: #000; border: 1px solid #ddd; }
+  body.light-mode .msg a { color: #2980b9; }
+  body.light-mode .input-area { background: #f0f0f0; }
+  body.light-mode .input-area input { background: #fff; color: #000; border: 1px solid #ccc; }
+
+  body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); color: var(--text-color); }
+  
+  .iphone-frame {
+    width: 96%; max-width: 390px; height: 96vh; max-height: 844px;
+    background: var(--dark); color: var(--text-color); display: flex; flex-direction: column; position: relative; overflow: hidden;
+    border-radius: 40px; border: 6px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 0 2px #000;
+  }
+
+  .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 40px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 15000; font-size: 0.8rem; font-weight: bold; color: var(--text-color); }
+  .status-bar .time { direction: ltr; }
+  .status-bar .icons { display: flex; gap: 5px; align-items: center; }
+  .status-bar .icons svg { width: 16px; height: 16px; fill: var(--text-color); }
+
+  .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 100px; height: 28px; background: #000; border-radius: 20px; z-index: 20000; }
+
+  #splashScreen { position: absolute; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 30px; transition: opacity 0.5s; }
+  .logo-icon { width: 100px; height: 100px; border: 3px solid var(--gold); border-radius: 30px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; position: relative; }
+  .logo-icon::after { content: ''; position: absolute; bottom: -8px; right: 10px; width: 20px; height: 20px; background: var(--dark); border: 3px solid var(--gold); border-top: none; border-left: none; transform: rotate(45deg); border-bottom-right-radius: 4px; }
+  .logo-icon span { color: var(--gold); font-size: 3rem; letter-spacing: 5px; margin-top: -10px; }
+  .splash-title { color: var(--gold); font-size: 2.5rem; font-weight: bold; margin-bottom: 10px; }
+  .splash-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 40px; }
+  .btn-start { background: var(--gold); color: #000; border: none; padding: 15px 40px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 80%; transition: 0.2s; }
+
+  #loginScreen { padding: 30px; display: none; flex-direction: column; justify-content: center; height: 100%; text-align: center; }
+  #loginScreen h1 { color: var(--gold); margin-bottom: 20px; }
+  #loginScreen input { padding: 15px; border: 1px solid #333; background: var(--dark-2); color: var(--text-color); border-radius: 12px; margin-bottom: 15px; font-size: 1rem; outline: none; }
+  #loginScreen button { padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+
+  .header { padding: 55px 20px 15px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--dark); }
+  .header .title { color: var(--gold); font-size: 1.5rem; font-weight: bold; display: flex; flex-direction: column; }
+  .header .title span { font-size: 0.7rem; color: var(--text-muted); font-weight: normal; margin-top: 5px; direction: ltr; }
+  .header .icons { display: flex; gap: 15px; color: var(--gold); font-size: 1.2rem; }
+  
+  .search-box { padding: 0 20px 15px; }
+  .search-box input { width: 100%; padding: 12px 15px; border-radius: 20px; border: none; background: var(--dark-2); color: var(--text-color); outline: none; font-size: 0.9rem; }
+
+  .stories { display: flex; gap: 15px; padding: 0 20px 15px; overflow-x: auto; }
+  .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
+  .story .avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; background: var(--dark-2); position: relative; }
+  .story span { font-size: 0.75rem; color: var(--text-muted); }
+  .online-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--dark); background: #888; transition: background 0.3s; }
+  .online-dot.online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+
+  .chat-list { flex: 1; overflow-y: auto; padding: 0 15px; }
+  .chat-item { display: flex; align-items: center; padding: 15px; border-radius: 15px; cursor: pointer; margin-bottom: 5px; }
+  .chat-item:hover { background: var(--dark-2); }
+  .chat-item .avatar { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: var(--dark-3); position: relative; }
+  .chat-item .avatar.channel { border-radius: 12px; background: var(--blue); color: white; }
+  .chat-item .info h4 { font-size: 1rem; color: var(--text-color); margin-bottom: 5px; }
+  .chat-item .info p { font-size: 0.8rem; color: var(--text-muted); transition: color 0.3s; }
+  .chat-item .info p.online-text { color: #2ecc71; font-weight: bold; }
+
+  .bottom-nav { background: var(--dark-2); padding: 12px 20px 25px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; font-size: 0.7rem; }
+  .nav-item.active { color: var(--gold); }
+  .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+  .version-tag { font-size: 0.6rem; color: #555; margin-top: 5px; }
+
+  .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 20000; }
+
+  #chatScreen { display: none; flex-direction: column; height: 100%; background: var(--dark); position: absolute; inset: 0; z-index: 100; border-radius: 35px; overflow: hidden; }
+  .chat-header { padding: 55px 20px 15px 20px; display: flex; align-items: center; gap: 15px; background: var(--dark-2); }
+  .chat-header .back { color: var(--gold); font-size: 1.5rem; cursor: pointer; }
+  .chat-header .chat-info { flex: 1; }
+  .chat-header .chat-info h4 { font-size: 1rem; color: var(--text-color); }
+  .chat-header .chat-info p { font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s; }
+  .chat-header .chat-info p.online-text { color: #2ecc71; }
+  
+  .typing-indicator { font-size: 0.75rem; color: var(--gold); padding: 0 20px 5px; height: 15px; display: none; }
+  .typing-indicator.show { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .messages-area { flex: 1; padding: 10px 20px 20px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--dark); }
+  
+  .msg-wrapper { display: flex; flex-direction: column; max-width: 80%; }
+  .msg-wrapper.sent { align-self: flex-start; }
+  .msg-wrapper.received { align-self: flex-end; }
+  .msg { padding: 8px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; cursor: pointer; user-select: none; position: relative; }
+  .msg.sent { background: var(--gold); color: #000; border-bottom-left-radius: 2px; }
+  .msg.received { background: var(--dark-3); color: var(--text-color); border-bottom-right-radius: 2px; }
+  .msg a { color: #3498db; text-decoration: underline; font-weight: bold; }
+  .msg.sent a { color: #1a5276; }
+  .msg img { max-width: 100%; border-radius: 10px; display: block; }
+  .msg audio { width: 200px; height: 40px; outline: none; margin-top: 5px; }
+  
+  .msg-meta { display: flex; justify-content: flex-end; align-items: center; gap: 5px; font-size: 0.65rem; margin-top: 5px; color: var(--text-muted); }
+  .msg-wrapper.sent .msg-meta { color: #333; }
+  .msg-wrapper.received .msg-meta { color: #aaa; }
+  .tick.seen { color: #2ecc71; font-weight: bold; }
+  .edited-tag { font-size: 0.6rem; color: #888; font-style: italic; margin-left: 5px; }
+
+  .input-area { padding: 10px 10px 25px 10px; background: var(--dark-2); display: flex; gap: 5px; align-items: center; }
+  .input-area input { flex: 1; padding: 10px 15px; border-radius: 20px; border: none; background: var(--dark); color: var(--text-color); outline: none; font-size: 0.85rem; }
+  .input-area button { background: var(--gold); color: #000; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; flex-shrink: 0; }
+  .input-area button.media-btn { background: transparent; color: var(--gold); font-size: 1.3rem; width: 35px; }
+  .input-area button.recording { background: var(--red); color: white; animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+  .emoji-picker { 
+    position: absolute; bottom: 80px; right: 10px; left: 10px;
+    background: var(--dark-2); border: 1px solid #444; border-radius: 15px; padding: 15px; 
+    display: none; grid-template-columns: repeat(7, 1fr); gap: 10px; 
+    z-index: 25000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); max-height: 250px; overflow-y: auto;
+  }
+  .emoji-picker span { font-size: 1.8rem; cursor: pointer; text-align: center; transition: transform 0.1s; }
+  .emoji-picker span:hover { transform: scale(1.3); }
+
+  .confirm-bar { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--red); color: white; z-index: 30000; display: none; justify-content: space-between; align-items: center; padding: 0 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 2px 10px rgba(0,0,0,0.5); animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+  .confirm-bar button { background: white; color: var(--red); border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; }
+  .confirm-bar .cancel-btn { background: transparent; color: white; border: 1px solid white; }
+  
+  .modal { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; justify-content: center; align-items: flex-end; border-radius: 35px; }
+  .modal-content { background: var(--dark-2); padding: 25px 25px 35px 25px; border-radius: 25px 25px 0 0; width: 100%; max-width: 390px; border-top: 1px solid #333; max-height: 80vh; overflow-y: auto; }
+  .modal-content h3 { margin-bottom: 20px; color: var(--gold); text-align: center; }
+  .modal-content input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #444; background: var(--dark); color: var(--text-color); border-radius: 12px; outline: none; }
+  .modal-content button { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 12px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 1rem; }
+  .modal-content .cancel { background: transparent; color: var(--text-muted); border: 1px solid #444; }
+  
+  .admin-check { display: flex; align-items: center; gap: 10px; padding: 12px; margin-bottom: 8px; background: var(--dark); border-radius: 10px; cursor: pointer; font-size: 0.9rem; }
+  .admin-btn-danger { background: var(--red) !important; color: white !important; }
+
+  .admin-user-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #444; border-radius: 10px; }
+  .admin-user-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #333; }
+  .admin-user-item:last-child { border-bottom: none; }
+  .admin-user-item span { font-size: 0.9rem; }
+  .admin-user-item button { width: auto; padding: 5px 15px; font-size: 0.8rem; margin: 0; background: var(--red); color: white; }
+
+  .search-bar-chat { display: none; padding: 5px 20px; background: var(--dark-2); }
+  .search-bar-chat input { width: 100%; padding: 8px 15px; border-radius: 15px; border: 1px solid #444; background: var(--dark); color: var(--text-color); outline: none; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<div class="iphone-frame">
+  
+  <div class="status-bar">
+    <div class="time" id="statusTime">۹:۴۱</div>
+    <div class="icons">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M1.58 12c2.3-2.5 6.28-2.5 8.58 0l1.41-1.41c-3.12-3.12-8.12-3.12-11.24 0L1.58 12zM12 16l-1.41-1.41c-1.17-1.17-2.93-1.17-4.1 0L5.08 16c1.96-1.96 5.13-1.96 7.09 0L12 16zm-4.58-4.58l-1.41-1.41C8.27 7.75 12.43 7.75 14.69 10l-1.41 1.41c-1.17-1.17-3.4-1.17-4.58 0h-.87z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <div class="dynamic-island"></div>
+
+  <div class="confirm-bar" id="confirmBar">
+    <span>پیام انتخاب شد:</span>
+    <div>
+      <button class="cancel-btn" onclick="cancelAction()">لغو</button>
+      <button onclick="editMessage()" style="background:var(--blue); color:white; margin-left:5px;">ویرایش</button>
+      <button onclick="confirmDelete()" style="background:var(--red); color:white;">حذف</button>
+    </div>
+  </div>
+
+  <audio id="silentAudio" preload="auto" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"></audio>
+  <audio id="notifSound" src="https://jimvkiprcbpqruvhyfrm.supabase.co/storage/v1/object/public/homework/notif.mp3.mp3"></audio>
+
+  <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="uploadImage(this.files[0])">
+
+  <div id="splashScreen">
+    <div class="logo-icon"><span>...</span></div>
+    <div class="splash-title">رودینو</div>
+    <div class="splash-sub">هیچ‌به در کنار شما</div>
+    <button class="btn-start" onclick="goToLogin()">شروع کنید</button>
+  </div>
+
+  <div id="loginScreen">
+    <h1>ورود به رودینو</h1>
+    <input type="text" id="usernameInput" placeholder="نام کاربری خود را وارد کنید">
+    <button onclick="login()">ورود / ثبت‌نام</button>
+  </div>
+
+  <div id="mainScreen" style="display:none; flex-direction:column; height:100%;">
+    <div class="header">
+      <div class="title">رودینو <span id="globalClock">در حال دریافت ساعت...</span></div>
+      <div class="icons">
+        <span style="cursor:pointer;" onclick="toggleTheme()">🌙</span>
+        <span style="cursor:pointer;" onclick="openAdminPanel()">⚙️</span>
+        <span style="cursor:pointer;" onclick="openCreateGroup()">👥+</span>
+        <span style="cursor:pointer;" onclick="openCreateChannel()">📢+</span>
+      </div>
+    </div>
+    
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="جستجوی مخاطب..." oninput="searchUsers()">
+    </div>
+
+    <div class="stories" id="storiesContainer">
+      <div class="story" onclick="openProfile()">
+        <div class="avatar add" id="myStoryAvatar" style="border: 2px dashed #888; color: #888;">+</div>
+        <span>وضعیت شما</span>
+      </div>
+    </div>
+
+    <div class="chat-list" id="userList"></div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="showTab('chats')">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        گفتگوها
+      </div>
+      <div class="nav-item" onclick="showTab('channels')">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        کانال‌ها
+      </div>
+      <div class="nav-item" onclick="showTab('people')">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        افراد
+      </div>
+      <div class="version-tag">v4.2.0</div>
+    </div>
+  </div>
+
+  <div id="chatScreen">
+    <div class="chat-header">
+      <span class="back" onclick="backToMain()">➡️</span>
+      <div class="avatar" id="chatAvatar" style="width:40px; height:40px; border-radius:50%; background:#333; display:flex; justify-content:center; align-items:center;"></div>
+      <div class="chat-info" onclick="showUserProfile()">
+        <h4 id="chatWithName"></h4>
+        <p id="chatStatus">در حال بارگذاری...</p>
+      </div>
+      <span id="chatInviteBtn" style="color:var(--gold); font-size:1.2rem; cursor:pointer; display:none;" onclick="copyCurrentInvite()" title="کپی لینک دعوت">🔗</span>
+      <span style="color:var(--gold); font-size:1.2rem; cursor:pointer;" onclick="toggleChatSearch()">🔍</span>
+    </div>
+    
+    <div class="search-bar-chat" id="chatSearchBar">
+      <input type="text" id="chatSearchInput" placeholder="جستجو در پیام‌ها..." oninput="searchInChat()">
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator">در حال نوشتن...</div>
+    <div class="messages-area" id="messagesArea"></div>
+    
+    <div class="input-area">
+      <button class="media-btn" onclick="toggleEmoji()">😊</button>
+      <button class="media-btn" onclick="document.getElementById('imageInput').click()">📷</button>
+      <button class="media-btn" id="voiceBtn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">🎤</button>
+      <input type="text" id="messageInput" placeholder="پیام..." onkeypress="if(event.key==='Enter') sendMessage()" oninput="handleTyping()">
+      <button onclick="sendMessage()">➤</button>
+    </div>
+
+    <div class="emoji-picker" id="emojiPicker">
+      <span onclick="addEmoji('😊')">😊</span>
+      <span onclick="addEmoji('😂')">😂</span>
+      <span onclick="addEmoji('🤣')">🤣</span>
+      <span onclick="addEmoji('❤️')">❤️</span>
+      <span onclick="addEmoji('😍')">😍</span>
+      <span onclick="addEmoji('😘')">😘</span>
+      <span onclick="addEmoji('😎')">😎</span>
+      <span onclick="addEmoji('🤔')">🤔</span>
+      <span onclick="addEmoji('😭')">😭</span>
+      <span onclick="addEmoji('😡')">😡</span>
+      <span onclick="addEmoji('🥺')">🥺</span>
+      <span onclick="addEmoji('👍')">👍</span>
+      <span onclick="addEmoji('👎')">👎</span>
+      <span onclick="addEmoji('🙏')">🙏</span>
+      <span onclick="addEmoji('👏')">👏</span>
+      <span onclick="addEmoji('💪')">💪</span>
+      <span onclick="addEmoji('✌️')">✌️</span>
+      <span onclick="addEmoji('🤝')">🤝</span>
+      <span onclick="addEmoji('🔥')">🔥</span>
+      <span onclick="addEmoji('✨')">✨</span>
+      <span onclick="addEmoji('🎉')">🎉</span>
+      <span onclick="addEmoji('💯')">💯</span>
+      <span onclick="addEmoji('💔')">💔</span>
+      <span onclick="addEmoji('🌹')">🌹</span>
+      <span onclick="addEmoji('🍕')">🍕</span>
+      <span onclick="addEmoji('☕')">☕</span>
+      <span onclick="addEmoji('⚽')">⚽</span>
+      <span onclick="addEmoji('🎮')">🎮</span>
+    </div>
+  </div>
+
+  <div class="home-indicator"></div>
+
+</div>
+
+<!-- مودال‌ها -->
+<div class="modal" id="profileModal">
+  <div class="modal-content">
+    <h3>ویرایش پروفایل</h3>
+    <input type="text" id="profileName" placeholder="نام شما">
+    <input type="text" id="profileAvatar" placeholder="ایموجی (مثلا 😊)" maxlength="2">
+    <button onclick="saveProfile()">ذخیره تغییرات</button>
+    <button class="cancel" onclick="closeModal('profileModal')">انصراف</button>
+  </div>
+</div>
+
+<div class="modal" id="userProfileModal">
+  <div class="modal-content" style="text-align:center;">
+    <div id="userProfileAvatar" style="font-size: 4rem; margin-bottom: 10px;">😊</div>
+    <h3 id="userProfileName" style="margin-bottom: 5px;"></h3>
+    <p id="userProfileStatus" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 20px;"></p>
+    <button onclick="closeModal('userProfileModal'); openChatFromProfile();" style="background: var(--blue); color: white;">ارسال پیام</button>
+    <button class="cancel" onclick="closeModal('userProfileModal')">بستن</button>
+  </div>
+</div>
+
+<div class="modal" id="createGroupModal">
+  <div class="modal-content">
+    <h3>ساخت گروه جدید</h3>
+    <input type="text" id="groupName" placeholder="اسم گروه">
+    <p style="font-size:0.8rem; color:#888; margin-bottom:10px;">اعضا را انتخاب کنید:</p>
+    <div id="groupMembersList" style="max-height: 150px; overflow-y: auto; background:var(--dark); padding:10px; border-radius:10px; margin-bottom:15px;"></div>
+    <button onclick="createGroup()">ساخت گروه</button>
+    <button class="cancel" onclick="closeModal('createGroupModal')">انصراف</button>
+  </div>
+</div>
+
+<div class="modal" id="createChannelModal">
+  <div class="modal-content">
+    <h3>ساخت کانال جدید</h3>
+    <input type="text" id="channelName" placeholder="اسم کانال">
+    <button onclick="createChannel()">ساخت کانال</button>
+    <button class="cancel" onclick="closeModal('createChannelModal')">انصراف</button>
+  </div>
+</div>
+
+<div class="modal" id="inviteModal">
+  <div class="modal-content">
+    <h3>لینک دعوت</h3>
+    <input type="text" id="inviteLinkInput" readonly style="direction:ltr; text-align:center; background:#111;">
+    <button onclick="copyInviteLink()">📋 کپی لینک</button>
+    <button class="cancel" onclick="closeModal('inviteModal')">بستن</button>
+  </div>
+</div>
+
+<div class="modal" id="adminModal">
+  <div class="modal-content">
+    <h3>⚠️ پنل مدیریت</h3>
+    <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">حذف کاربران:</p>
+    <div class="admin-user-list" id="adminUserList"></div>
+    <hr style="border-color:#333; margin:15px 0;">
+    <p style="font-size:0.9rem; margin-bottom:10px; color:#ccc;">پاک کردن کلی:</p>
+    <label class="admin-check"><input type="checkbox" id="delMessages"> پاک کردن تمام پیام‌ها</label>
+    <label class="admin-check"><input type="checkbox" id="delGroups"> پاک کردن تمام گروه‌ها و کانال‌ها</label>
+    <label class="admin-check"><input type="checkbox" id="delUsers"> پاک کردن تمام حساب‌های کاربری</label>
+    <button class="admin-btn-danger" onclick="executeReset()">🗑️ پاک کردن موارد انتخاب شده</button>
+    <button class="cancel" onclick="closeModal('adminModal')">انصراف</button>
+  </div>
+</div>
+
+<script>
+  // ========================================================
+  // کدهای جاوا اسکریپت (کامل و بدون تغییر نسبت به نسخه قبلی)
+  // ========================================================
+  const db = window.supabase.createClient(
+    "https://jimvkiprcbpqruvhyfrm.supabase.co",
+    "sb_publishable_00YkZ5PxbALEn4O09XKgSw_KFQiSWE0"
+  );
+
+  let currentUser = null, currentChat = null, isGroup = false, isChannel = false;
+  let allUsers = [], combinedList = [], lastMsgTime = "1970-01-01T00:00:00Z";
+  let pollInterval = null, currentTab = 'chats', globalTimeOffset = 0;
+  let selectedMsg = null;
+  let mediaRecorder, audioChunks = [];
+  let typingTimeout;
+
+  const enc = (t) => t.split('').map(c => c.charCodeAt(0).toString(2).padStart(16, '0')).join(' ');
+  const dec = (b) => !b ? "" : b.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+
+  async function syncGlobalTime() {
+    try {
+      const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran');
+      const data = await res.json();
+      globalTimeOffset = new Date(data.datetime).getTime() - new Date().getTime();
+    } catch (e) { globalTimeOffset = 0; }
+  }
+
+  const formatTime = (iso) => {
+    if (!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit' });
+  };
+
+  const getFullIranTime = () => {
+    const date = new Date(new Date().getTime() + globalTimeOffset);
+    return date.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  };
+  
+  const updateStatusTime = () => {
+    const date = new Date(new Date().getTime() + globalTimeOffset);
+    const timeStr = date.toLocaleTimeString('fa-IR', { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('statusTime').innerText = timeStr;
+  };
+
+  function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  }
+
+  window.onload = async () => {
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+    await syncGlobalTime();
+    updateStatusTime();
+    setInterval(updateStatusTime, 10000);
+    if (localStorage.getItem('chat_user')) checkAutoLogin();
+  };
+
+  function unlockAudio() {
+    const silent = document.getElementById('silentAudio');
+    silent.volume = 0;
+    silent.play().then(() => { silent.pause(); silent.currentTime = 0; }).catch(e => {});
+  }
+
+  function goToLogin() {
+    unlockAudio();
+    document.getElementById('splashScreen').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('splashScreen').style.display = 'none';
+      if (localStorage.getItem('chat_user')) checkAutoLogin();
+      else document.getElementById('loginScreen').style.display = 'flex';
+    }, 500);
+  }
+
+  async function checkAutoLogin() {
+    currentUser = JSON.parse(localStorage.getItem('chat_user'));
+    const { data } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+    if (data) {
+      currentUser.username = dec(data.encrypted_data);
+      currentUser.avatar = data.encrypted_avatar ? dec(data.encrypted_avatar) : "😊";
+      enterApp();
+    } else {
+      localStorage.removeItem('chat_user');
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('splashScreen').style.display = 'none';
     }
   }
+
+  async function login() {
+    unlockAudio();
+    const username = document.getElementById('usernameInput').value.trim();
+    if (!username) return alert("اسم را وارد کنید");
+    const { data: profiles } = await db.from('profiles').select('*');
+    let found = null;
+    for (let p of profiles) {
+      if (dec(p.encrypted_data) === username) {
+        found = { id: p.id, username: username, avatar: p.encrypted_avatar ? dec(p.encrypted_avatar) : "😊" };
+        break;
+      }
+    }
+    if (!found) {
+      const { data: newUser } = await db.from('profiles').insert([{ encrypted_data: enc(username), encrypted_avatar: enc("😊") }]).select().single();
+      found = { id: newUser.id, username: username, avatar: "😊" };
+    }
+    currentUser = found;
+    localStorage.setItem('chat_user', JSON.stringify(currentUser));
+    enterApp();
+  }
+
+  async function enterApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('splashScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'flex';
+    document.getElementById('myStoryAvatar').innerText = currentUser.avatar;
+    
+    await db.from('profiles').update({ is_online: true }).eq('id', currentUser.id);
+    
+    setInterval(() => {
+      document.getElementById('globalClock').innerText = getFullIranTime();
+    }, 1000);
+    
+    loadUsers();
+    setupRealtime();
+  }
+
+  function setupRealtime() {
+    db.channel('online-users')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
+        const updatedUser = payload.new;
+        const userIndex = allUsers.findIndex(u => u.id === updatedUser.id);
+        if (userIndex !== -1) {
+          allUsers[userIndex].is_online = updatedUser.is_online;
+          allUsers[userIndex].last_seen = updatedUser.last_seen;
+          renderList(combinedList);
+          renderStories(allUsers);
+          if (currentChat && currentChat.id === updatedUser.id) updateChatStatus();
+        }
+      })
+      .subscribe();
+
+    db.channel('new-messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+        const newMsg = payload.new;
+        if (newMsg.sender_id !== currentUser.id) {
+          const sound = document.getElementById('notifSound');
+          sound.currentTime = 0;
+          sound.play().catch(e => console.log("صدا:", e));
+          
+          if (Notification.permission === "granted") {
+            new Notification("پیام جدید در رودینو", { body: "شما یک پیام جدید دارید" });
+          }
+
+          if (currentChat && !isGroup && !isChannel && newMsg.sender_id === currentChat.id && newMsg.receiver_id === currentUser.id) {
+            loadMessages(false);
+          } else if (currentChat && isGroup && newMsg.group_id === currentChat.id) {
+            loadMessages(false);
+          } else if (currentChat && isChannel && newMsg.channel_id === currentChat.id) {
+            loadMessages(false);
+          }
+        }
+      })
+      .subscribe();
+
+    db.channel('delete-messages')
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
+        if (currentChat) loadMessages(true);
+      })
+      .subscribe();
+      
+    db.channel('typing')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, payload => {
+        if (currentChat && payload.new.id === currentChat.id && payload.new.is_typing) {
+          document.getElementById('typingIndicator').innerText = `${currentChat.name} در حال نوشتن...`;
+          document.getElementById('typingIndicator').classList.add('show');
+          clearTimeout(typingTimeout);
+          typingTimeout = setTimeout(() => {
+            document.getElementById('typingIndicator').classList.remove('show');
+          }, 2000);
+        }
+      })
+      .subscribe();
+  }
+
+  window.addEventListener('beforeunload', () => {
+    if (currentUser) {
+      db.from('profiles').update({ is_online: false, last_seen: new Date().toISOString(), is_typing: false }).eq('id', currentUser.id);
+    }
+  });
+
+  function showTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    renderList(combinedList);
+  }
+
+  async function loadUsers() {
+    const { data: profiles } = await db.from('profiles').select('*').neq('id', currentUser.id);
+    allUsers = profiles.map(p => ({ id: p.id, name: dec(p.encrypted_data), avatar: p.encrypted_avatar ? dec(p.encrypted_avatar) : "😊", isGroup: false, isChannel: false, is_online: p.is_online, last_seen: p.last_seen }));
+
+    const { data: groups } = await db.from('groups').select('*');
+    const myGroups = groups.filter(g => { try { return JSON.parse(dec(g.encrypted_members)).includes(currentUser.id); } catch(e) { return false; } })
+      .map(g => ({ id: g.id, name: dec(g.encrypted_name), avatar: "👥", isGroup: true, isChannel: false }));
+
+    const { data: channels } = await db.from('channels').select('*');
+    const myChannels = channels.filter(c => { try { return JSON.parse(dec(c.encrypted_members)).includes(currentUser.id); } catch(e) { return false; } })
+      .map(c => ({ id: c.id, name: dec(c.encrypted_name), avatar: "📢", isGroup: false, isChannel: true }));
+
+    combinedList = [...myChannels, ...myGroups, ...allUsers];
+    renderList(combinedList);
+    renderStories(allUsers);
+    if(currentChat) updateChatStatus();
+  }
+
+  function updateChatStatus() {
+    if(isGroup) { document.getElementById('chatStatus').innerText = "گروه"; return; }
+    if(isChannel) { document.getElementById('chatStatus').innerText = "کانال"; return; }
+    const user = allUsers.find(u => u.id === currentChat.id);
+    if (!user) return;
+    const statusEl = document.getElementById('chatStatus');
+    if (user.is_online) {
+      statusEl.innerText = "آنلاین";
+      statusEl.className = "online-text";
+    } else {
+      statusEl.innerText = `آخرین بازدید: ${formatTime(user.last_seen)}`;
+      statusEl.className = "";
+    }
+  }
+
+  function renderStories(users) {
+    const container = document.getElementById('storiesContainer');
+    while (container.children.length > 1) container.removeChild(container.lastChild);
+    users.slice(0, 8).forEach(u => {
+      const div = document.createElement('div');
+      div.className = 'story';
+      div.onclick = () => openChat(u);
+      div.innerHTML = `<div class="avatar">${u.avatar}<div class="online-dot ${u.is_online ? 'online' : ''}"></div></div><span>${u.name.split(' ')[0]}</span>`;
+      container.appendChild(div);
+    });
+  }
+
+  function renderList(items) {
+    const list = document.getElementById('userList');
+    let filtered = items;
+    if (currentTab === 'channels') filtered = items.filter(i => i.isChannel);
+    else if (currentTab === 'people') filtered = items.filter(i => !i.isGroup && !i.isChannel);
+
+    list.innerHTML = filtered.length ? '' : '<p style="text-align:center; padding:20px; color:var(--text-muted);">موردی یافت نشد</p>';
+    filtered.forEach(u => {
+      const div = document.createElement('div');
+      div.className = 'chat-item';
+      div.onclick = () => openChat(u);
+      let statusHtml = u.isChannel ? '<p>کانال</p>' : u.isGroup ? '<p>گروه</p>' : 
+        `<p class="${u.is_online ? 'online-text' : ''}">${u.is_online ? '🟢 آنلاین' : '⚪ آفلاین'}</p>`;
+
+      div.innerHTML = `
+        <div class="avatar ${u.isChannel ? 'channel' : ''}">${u.avatar}</div>
+        <div class="info">
+          <h4>${u.name} ${u.isChannel ? '📢' : u.isGroup ? '👥' : ''}</h4>
+          ${statusHtml}
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function searchUsers() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    renderList(combinedList.filter(u => u.name.toLowerCase().includes(q)));
+  }
+
+  function openChat(item) {
+    unlockAudio();
+    if (Notification.permission === "default") Notification.requestPermission();
+
+    currentChat = item;
+    isGroup = item.isGroup;
+    isChannel = item.isChannel;
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('chatScreen').style.display = 'flex';
+    document.getElementById('chatWithName').innerText = item.name;
+    document.getElementById('chatAvatar').innerText = item.avatar;
+    document.getElementById('messagesArea').innerHTML = '';
+    updateChatStatus();
+
+    document.getElementById('chatInviteBtn').style.display = (isGroup || isChannel) ? 'block' : 'none';
+
+    const inputArea = document.querySelector('.input-area');
+    if (isChannel) {
+      db.from('channels').select('encrypted_creator_id').eq('id', item.id).single().then(({data}) => {
+        if(dec(data.encrypted_creator_id) !== currentUser.id) inputArea.style.display = 'none';
+        else inputArea.style.display = 'flex';
+      });
+    } else {
+      inputArea.style.display = 'flex';
+    }
+
+    loadMessages(true);
+    if(pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(() => loadMessages(false), 3000);
+  }
+
+  function backToMain() {
+    currentChat = null;
+    clearInterval(pollInterval);
+    document.getElementById('chatScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'flex';
+    document.getElementById('typingIndicator').classList.remove('show');
+    loadUsers();
+    db.from('profiles').update({ is_typing: false }).eq('id', currentUser.id);
+  }
+
+  async function loadMessages(init) {
+    if (!currentChat) return;
+
+    if (!isGroup && !isChannel && init) {
+      await db.from('messages').update({ is_seen: true }).eq('sender_id', currentChat.id).eq('receiver_id', currentUser.id).eq('is_seen', false);
+    }
+
+    let q = db.from('messages').select('*').order('created_at', { ascending: true });
+    
+    if (isChannel) q = q.eq('channel_id', currentChat.id);
+    else if (isGroup) q = q.eq('group_id', currentChat.id);
+    else q = q.is('group_id', null).is('channel_id', null).or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${currentChat.id}),and(sender_id.eq.${currentChat.id},receiver_id.eq.${currentUser.id})`);
+
+    if (!init) q = q.gt('created_at', lastMsgTime);
+    const { data: msgs } = await q;
+    
+    if (msgs && msgs.length > 0) {
+      const area = document.getElementById('messagesArea');
+      if(init) area.innerHTML = '';
+      
+      msgs.forEach(m => {
+        if(m.created_at > lastMsgTime || init) {
+          const wrapper = document.createElement('div');
+          wrapper.className = `msg-wrapper ${m.sender_id === currentUser.id ? 'sent' : 'received'}`;
+          let tickHtml = m.sender_id === currentUser.id ? (m.is_seen ? '<span class="tick seen">✓✓</span>' : '<span class="tick">✓</span>') : '';
+          
+          const msgDiv = document.createElement('div');
+          msgDiv.className = `msg ${m.sender_id === currentUser.id ? 'sent' : 'received'}`;
+          
+          let rawText = dec(m.encrypted_content);
+          let isEdited = rawText.includes('[EDITED]');
+          if (isEdited) rawText = rawText.replace('[EDITED]', '').trim();
+          
+          if (rawText.includes('[IMAGE]')) {
+            let url = rawText.replace('[IMAGE]', '').trim();
+            msgDiv.innerHTML = `<img src="${url}" alt="عکس">`;
+          } else if (rawText.includes('[AUDIO]')) {
+            let url = rawText.replace('[AUDIO]', '').trim();
+            msgDiv.innerHTML = `<audio controls src="${url}"></audio>`;
+          } else {
+            msgDiv.innerHTML = rawText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+          }
+
+          msgDiv.oncontextmenu = (e) => { e.preventDefault(); selectMessageForAction(m.id, rawText); };
+          let touchTimer;
+          msgDiv.ontouchstart = (e) => { touchTimer = setTimeout(() => { selectMessageForAction(m.id, rawText); }, 600); };
+          msgDiv.ontouchend = () => clearTimeout(touchTimer);
+          msgDiv.ontouchmove = () => clearTimeout(touchTimer);
+
+          wrapper.appendChild(msgDiv);
+          
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'msg-meta';
+          metaDiv.innerHTML = `<span>${isEdited ? '<i class="edited-tag">(ویرایش شده)</i>' : ''}</span><span>${formatTime(m.created_at)}</span>${tickHtml}`;
+          wrapper.appendChild(metaDiv);
+
+          area.appendChild(wrapper);
+          lastMsgTime = m.created_at;
+        }
+      });
+      area.scrollTop = area.scrollHeight;
+    }
+  }
+
+  function selectMessageForAction(msgId, rawText) {
+    selectedMsg = { id: msgId, text: rawText };
+    const bar = document.getElementById('confirmBar');
+    const editBtn = bar.querySelector('button[onclick="editMessage()"]');
+    if (rawText.includes('[IMAGE]') || rawText.includes('[AUDIO]')) editBtn.style.display = 'none';
+    else editBtn.style.display = 'block';
+    bar.style.display = 'flex';
+  }
+
+  function cancelAction() {
+    selectedMsg = null;
+    document.getElementById('confirmBar').style.display = 'none';
+  }
+
+  async function editMessage() {
+    if (!selectedMsg) return;
+    let newText = prompt("متن جدید را وارد کنید:", selectedMsg.text);
+    if (newText === null || newText.trim() === "" || newText === selectedMsg.text) {
+      cancelAction(); return;
+    }
+    try {
+      await db.from('messages').update({ encrypted_content: enc(newText + ' [EDITED]') }).eq('id', selectedMsg.id);
+      cancelAction();
+      loadMessages(true); 
+    } catch (err) { alert("خطا در ویرایش: " + err.message); }
+  }
+
+  async function confirmDelete() {
+    if (!selectedMsg) return;
+    try {
+      await db.from('messages').delete().eq('id', selectedMsg.id);
+      cancelAction();
+      loadMessages(true); 
+    } catch (err) { alert("❌ خطا در حذف: " + err.message); }
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    if (!input.value.trim() || !currentChat) return;
+    
+    await insertMessage(input.value.trim());
+    input.value = '';
+    document.getElementById('emojiPicker').style.display = 'none';
+    db.from('profiles').update({ is_typing: false }).eq('id', currentUser.id);
+  }
+
+  async function insertMessage(text) {
+    const data = { sender_id: currentUser.id, encrypted_content: enc(text), is_seen: false };
+    if (isChannel) data.channel_id = currentChat.id;
+    else if (isGroup) data.group_id = currentChat.id;
+    else data.receiver_id = currentChat.id;
+    
+    await db.from('messages').insert([data]);
+    loadMessages(false);
+  }
+
+  async function uploadImage(file) {
+    if (!file || !currentChat) return;
+    const compressedFile = await compressImage(file);
+    const fileName = `img_${Date.now()}.jpg`;
+    try {
+      const { error } = await db.storage.from('chat-media').upload(fileName, compressedFile);
+      if (error) throw error;
+      const { data: urlData } = db.storage.from('chat-media').getPublicUrl(fileName);
+      await insertMessage(`[IMAGE] ${urlData.publicUrl}`);
+    } catch (err) { alert("خطا در آپلود عکس: " + err.message); }
+  }
+
+  function compressImage(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const scale = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => { resolve(new File([blob], file.name, { type: 'image/jpeg' })); }, 'image/jpeg', 0.7);
+        };
+      };
+    });
+  }
+
+  async function startRecording() {
+    if (!currentChat) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const fileName = `voice_${Date.now()}.webm`;
+        document.getElementById('voiceBtn').classList.remove('recording');
+        const { error } = await db.storage.from('chat-media').upload(fileName, audioBlob);
+        if (error) return alert("خطا در آپلود ویس: " + error.message);
+        const { data: urlData } = db.storage.from('chat-media').getPublicUrl(fileName);
+        await insertMessage(`[AUDIO] ${urlData.publicUrl}`);
+        stream.getTracks().forEach(track => track.stop());
+      };
+      mediaRecorder.start();
+      document.getElementById('voiceBtn').classList.add('recording');
+    } catch (err) { alert("خطا در دسترسی به میکروفون: " + err.message); }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  }
+
+  function toggleEmoji() {
+    const picker = document.getElementById('emojiPicker');
+    picker.style.display = picker.style.display === 'grid' ? 'none' : 'grid';
+  }
+
+  function addEmoji(emoji) {
+    const input = document.getElementById('messageInput');
+    input.value += emoji;
+    input.focus();
+  }
+
+  function handleTyping() {
+    if (!currentUser) return;
+    db.from('profiles').update({ is_typing: true }).eq('id', currentUser.id);
+    clearTimeout(window.typingTimer);
+    window.typingTimer = setTimeout(() => {
+      db.from('profiles').update({ is_typing: false }).eq('id', currentUser.id);
+    }, 2000);
+  }
+
+  function toggleChatSearch() {
+    const bar = document.getElementById('chatSearchBar');
+    bar.style.display = bar.style.display === 'block' ? 'none' : 'block';
+    if (bar.style.display === 'block') document.getElementById('chatSearchInput').focus();
+  }
+
+  function searchInChat() {
+    const q = document.getElementById('chatSearchInput').value.toLowerCase();
+    const msgs = document.querySelectorAll('.msg');
+    msgs.forEach(m => {
+      if (q === "") m.style.outline = 'none';
+      else if (m.innerText.toLowerCase().includes(q)) m.style.outline = '2px solid var(--gold)';
+      else m.style.outline = 'none';
+    });
+  }
+
+  function showUserProfile() {
+    if (!currentChat || isGroup || isChannel) return;
+    document.getElementById('userProfileAvatar').innerText = currentChat.avatar;
+    document.getElementById('userProfileName').innerText = currentChat.name;
+    
+    const user = allUsers.find(u => u.id === currentChat.id);
+    const statusEl = document.getElementById('userProfileStatus');
+    if (user && user.is_online) statusEl.innerText = "آنلاین 🟢";
+    else if (user) statusEl.innerText = `آخرین بازدید: ${formatTime(user.last_seen)}`;
+    
+    document.getElementById('userProfileModal').style.display = 'flex';
+  }
+
+  function openChatFromProfile() {}
 
   function openProfile() {
     document.getElementById('profileName').value = currentUser.username;
@@ -1028,6 +2071,21 @@
     try {
       if (delMsgs) await db.from('messages').delete().neq('id', -1);
       if (delGrps) {
+        await db.from('groups').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await db.from('channels').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      }
+      if (delUsrs) {
+        await db.from('profiles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        localStorage.removeItem('chat_user');
+      }
+      alert("✅ انجام شد!");
+      if (delUsrs) location.reload();
+      else { closeModal('adminModal'); loadUsers(); }
+    } catch (error) { alert("❌ خطا: " + error.message); }
+  }
+</script>
+</body>
+</html>
         await db.from('groups').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await db.from('channels').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       }

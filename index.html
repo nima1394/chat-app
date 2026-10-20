@@ -237,7 +237,6 @@
     </div>
   </div>
 
-  <!-- مودال بکاپ -->
   <div class="modal" id="backupModal">
     <div class="modal-content">
       <h3>پشتیبان‌گیری و بازیابی</h3>
@@ -315,7 +314,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
-      <div class="version-tag">v5.2.0</div>
+      <div class="version-tag">v5.2.1</div>
     </div>
   </div>
 
@@ -541,7 +540,11 @@
     unlockAudio();
     const username = document.getElementById('usernameInput').value.trim();
     if (!username) return alert("اسم را وارد کنید");
-    const { data: profiles } = await db.from('profiles').select('*');
+    
+    // ✅ اصلاح: گرفتن همه پروفایل‌ها بدون مشکل
+    const { data: profiles, error } = await db.from('profiles').select('*');
+    if (error) return alert("خطا در اتصال به دیتابیس: " + error.message);
+
     let found = null;
     for (let p of profiles) {
       if (dec(p.encrypted_data) === username) {
@@ -549,10 +552,12 @@
         break;
       }
     }
+    
     if (!found) {
       const { data: newUser } = await db.from('profiles').insert([{ encrypted_data: enc(username), encrypted_avatar: enc("😊") }]).select().single();
       found = { id: newUser.id, username: username, avatar: "😊" };
     }
+    
     currentUser = found;
     localStorage.setItem('chat_user', JSON.stringify(currentUser));
     enterApp();
@@ -645,9 +650,22 @@
     renderList(combinedList);
   }
 
+  // ✅ اصلاح: لود کردن کاربران با دقت بیشتر
   async function loadUsers() {
-    const { data: profiles } = await db.from('profiles').select('*').neq('id', currentUser.id);
-    allUsers = profiles.map(p => ({ id: p.id, name: dec(p.encrypted_data), avatar: p.encrypted_avatar ? dec(p.encrypted_avatar) : "😊", isGroup: false, isChannel: false, is_online: p.is_online, last_seen: p.last_seen }));
+    if (!currentUser) return;
+    
+    const { data: profiles, error } = await db.from('profiles').select('*').neq('id', currentUser.id);
+    if (error) return console.error("خطا در لود کاربران:", error);
+
+    allUsers = profiles.map(p => ({ 
+      id: p.id, 
+      name: dec(p.encrypted_data), 
+      avatar: p.encrypted_avatar ? dec(p.encrypted_avatar) : "😊", 
+      isGroup: false, 
+      isChannel: false, 
+      is_online: p.is_online, 
+      last_seen: p.last_seen 
+    }));
 
     const { data: groups } = await db.from('groups').select('*');
     const myGroups = groups.filter(g => { try { return JSON.parse(dec(g.encrypted_members)).includes(currentUser.id); } catch(e) { return false; } })
@@ -714,9 +732,16 @@
     });
   }
 
+  // ✅ اصلاح: سرچ بدون مشکل با کاراکترهای فارسی
   function searchUsers() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    renderList(combinedList.filter(u => u.name.toLowerCase().includes(q)));
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!q) return renderList(combinedList);
+    
+    const filtered = combinedList.filter(u => 
+      u.name.toLowerCase().includes(q) || 
+      u.name.includes(q)
+    );
+    renderList(filtered);
   }
 
   function openChat(item) {
@@ -1143,23 +1168,19 @@
   async function createBackup() {
     if (!currentUser) return;
 
-    // چک کردن زمان آخرین بکاپ
     const { data: profile } = await db.from('profiles').select('last_backup').eq('id', currentUser.id).single();
     if (profile.last_backup) {
       const lastBackupDate = new Date(profile.last_backup);
       const now = new Date();
       const diffDays = (now - lastBackupDate) / (1000 * 60 * 60 * 24);
-      if (diffDiffDays < 7) {
+      if (diffDays < 7) {
         return alert("❌ شما هر هفته فقط یک بار می‌توانید بکاپ بگیرید!\nلطفاً " + Math.ceil(7 - diffDays) + " روز دیگر امتحان کنید.");
       }
     }
 
-    const backupCode = Math.floor(10 + Math.random() * 90).toString(); // کد دو رقمی 10 تا 99
+    const backupCode = Math.floor(10 + Math.random() * 90).toString();
     
-    // گرفتن اطلاعات کاربر
     const { data: userData } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
-    
-    // گرفتن پیام‌های کاربر
     const { data: messages } = await db.from('messages').select('*').or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
 
     const backupData = JSON.stringify({ user: userData, messages: messages });
@@ -1179,7 +1200,6 @@
     const code = document.getElementById('restoreCodeInput').value.trim();
     if (!code || code.length !== 2) return alert("کد بکاپ باید دو رقمی باشد!");
 
-    // پیدا کردن کاربری که این کد بکاپ رو داره
     const { data: targetUser } = await db.from('profiles').select('*').eq('backup_code', code).single();
     if (!targetUser) return alert("❌ کد بکاپ نامعتبر است!");
 
@@ -1188,23 +1208,20 @@
     try {
       const backup = JSON.parse(targetUser.backup_data);
       
-      // بازیابی اطلاعات پروفایل
       await db.from('profiles').update({
         encrypted_data: backup.user.encrypted_data,
         encrypted_avatar: backup.user.encrypted_avatar
       }).eq('id', currentUser.id);
 
-      // آپدیت یوزر فعلی توی مرورگر
       currentUser.username = dec(backup.user.encrypted_data);
       currentUser.avatar = dec(backup.user.encrypted_avatar);
       localStorage.setItem('chat_user', JSON.stringify(currentUser));
 
-      // بازیابی پیام‌ها (پاک کردن پیام‌های قبلی و درج پیام‌های بکاپ)
       await db.from('messages').delete().or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
       
       for (let msg of backup.messages) {
         const newMsg = { ...msg };
-        delete newMsg.id; // حذف آیدی قبلی
+        delete newMsg.id;
         newMsg.sender_id = currentUser.id;
         await db.from('messages').insert([newMsg]);
       }

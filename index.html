@@ -70,10 +70,8 @@
   .control-card svg { width: 30px; height: 30px; fill: var(--gold); margin-bottom: 10px; }
   .control-card span { font-size: 0.9rem; font-weight: bold; color: #fff; }
   
-  /* کارت‌های بزرگ‌تر برای تم */
   .control-card.wide { grid-column: span 2; flex-direction: row; justify-content: space-between; padding: 15px 25px; }
   
-  /* دکمه بستن (کشیدن به بالا) */
   .close-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 10px; margin: 0 auto 20px auto; cursor: pointer; }
   
   #splashScreen { position: absolute; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 30px; transition: opacity 0.5s; }
@@ -280,8 +278,7 @@
       <div class="title">رودینو <span id="globalClock">در حال دریافت ساعت...</span></div>
       <div class="icons">
         <span style="cursor:pointer;" onclick="toggleTheme()">🌙</span>
-        <span style="cursor:pointer;" onclick="openCreateGroup()">👥+</span>
-        <span style="cursor:pointer;" onclick="openCreateChannel()">📢+</span>
+        <span style="cursor:pointer;" onclick="openAdminPanel()">⚙️</span>
       </div>
     </div>
     
@@ -311,7 +308,7 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         افراد
       </div>
-      <div class="version-tag">v5.0.0</div>
+      <div class="version-tag">v5.1.0</div>
     </div>
   </div>
 
@@ -459,7 +456,6 @@
   const enc = (t) => t.split('').map(c => c.charCodeAt(0).toString(2).padStart(16, '0')).join(' ');
   const dec = (b) => !b ? "" : b.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
 
-  // ====== کنترل سنتر ======
   function toggleControlCenter() {
     const cc = document.getElementById('controlCenter');
     cc.classList.toggle('open');
